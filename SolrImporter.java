@@ -121,7 +121,9 @@ public class SolrImporter {
 		//SAXParserFactory factory = SAXParserFactory.newInstance();
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 		try {
-			readFileCorpus(server, factory, "D:\\Dropbox\\NLP Research\\Corpus\\data\\English\\web\\eng-NG-31-1256.gz");
+			//readFileCorpus(server, factory, "D:\\Dropbox\\NLP Research\\Corpus\\data\\English\\web\\eng-NG-31-1256.gz");
+			readFileCorpus(server, factory, "C:\\Users\\Detian\\Documents\\GitHub\\TAC-2013-KBP-English-Sentiment-Slot-Filling\\DataSubset\\discussions.xml");
+			//readFileCorpus(server, factory, "D:\\Dropbox\\NLP Research\\Resources\\LDC2013E61_TAC_2013_KBP_English_Sentiment_Slot_Filling_Sample_Queries_and_Annotations\\data\\tac_2013_kpb_ssf_sample_documents.xml");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

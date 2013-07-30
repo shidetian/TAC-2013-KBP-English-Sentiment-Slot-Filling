@@ -115,7 +115,7 @@ public class CorpusHandler{
 				assert(category.equals("discussion"));
 				currentDoc.addField("author", parser.getAttributeValue(0));
 				//Append post id to doc id
-				currentDoc.addField("id", baseID+"."+parser.getAttributeValue(0));
+				currentDoc.addField("id", baseID+"."+parser.getAttributeValue(2));
 			}else{
 				assert(category.equals("web"));
 				//Append the poster number to the doc id
