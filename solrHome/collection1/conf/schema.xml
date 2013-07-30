@@ -107,7 +107,7 @@
    -->
         
    <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" /> 
-   <field name="sku" type="text_en_splitting_tight" indexed="true" stored="true" omitNorms="true"/>
+   <!--<field name="sku" type="text_en_splitting_tight" indexed="true" stored="true" omitNorms="true"/>
    <field name="name" type="text_general" indexed="true" stored="true"/>
    <field name="manu" type="text_general" indexed="true" stored="true" omitNorms="true"/>
    <field name="cat" type="string" indexed="true" stored="true" multiValued="true"/>
@@ -119,7 +119,7 @@
    <field name="popularity" type="int" indexed="true" stored="true" />
    <field name="inStock" type="boolean" indexed="true" stored="true" />
 
-   <field name="store" type="location" indexed="true" stored="true"/>
+   <field name="store" type="location" indexed="true" stored="true"/>-->
 
    <!-- Common metadata fields, named specifically to match up with
      SolrCell metadata when parsing rich documents such as Word, PDF.
@@ -129,19 +129,19 @@
        "content_type": From the HTTP headers of incoming stream
        "resourcename": From SolrCell request param resource.name
    -->
-   <field name="title" type="text_general" indexed="true" stored="true" multiValued="true"/>
+   <!--<field name="title" type="text_general" indexed="true" stored="true" multiValued="true"/>
    <field name="subject" type="text_general" indexed="true" stored="true"/>
    <field name="description" type="text_general" indexed="true" stored="true"/>
-   <field name="comments" type="text_general" indexed="true" stored="true"/>
+   <field name="comments" type="text_general" indexed="true" stored="true"/>-->
    <field name="author" type="text_general" indexed="true" stored="true"/>
-   <field name="keywords" type="text_general" indexed="true" stored="true"/>
+   <!--<field name="keywords" type="text_general" indexed="true" stored="true"/>-->
    <field name="category" type="text_general" indexed="true" stored="true"/>
-   <field name="resourcename" type="text_general" indexed="true" stored="true"/>
+   <!--<field name="resourcename" type="text_general" indexed="true" stored="true"/>
    <field name="url" type="text_general" indexed="true" stored="true"/>
    <field name="content_type" type="string" indexed="true" stored="true" multiValued="true"/>
    <field name="last_modified" type="date" indexed="true" stored="true"/>
    <field name="links" type="string" indexed="true" stored="true" multiValued="true"/>
-
+   -->
    <!-- Main body of document extracted by SolrCell.
         NOTE: This field is not indexed by default, since it is also copied to "text"
         using copyField below. This is to save space. Use this field for returning and
@@ -159,9 +159,9 @@
 
    <!-- non-tokenized version of manufacturer to make it easier to sort or group
         results by manufacturer.  copied from "manu" via copyField -->
-   <field name="manu_exact" type="string" indexed="true" stored="false"/>
+   <!--<field name="manu_exact" type="string" indexed="true" stored="false"/>
 
-   <field name="payloads" type="payloads" indexed="true" stored="true"/>
+   <field name="payloads" type="payloads" indexed="true" stored="true"/>-->
 
    <field name="_version_" type="long" indexed="true" stored="true"/>
 
@@ -253,25 +253,25 @@
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
 
-   <copyField source="cat" dest="text"/>
+   <!--<copyField source="cat" dest="text"/>
    <copyField source="name" dest="text"/>
    <copyField source="manu" dest="text"/>
    <copyField source="features" dest="text"/>
    <copyField source="includes" dest="text"/>
-   <copyField source="manu" dest="manu_exact"/>
+   <copyField source="manu" dest="manu_exact"/>-->
 
    <!-- Copy the price into a currency enabled field (default USD) -->
-   <copyField source="price" dest="price_c"/>
+   <!--<copyField source="price" dest="price_c"/>-->
 
    <!-- Text fields from SolrCell to search by default in our catch-all field -->
-   <copyField source="title" dest="text"/>
+   <!--<copyField source="title" dest="text"/>-->
    <copyField source="author" dest="text"/>
-   <copyField source="description" dest="text"/>
-   <copyField source="keywords" dest="text"/>
+   <!--<copyField source="description" dest="text"/>
+   <copyField source="keywords" dest="text"/>-->
    <copyField source="content" dest="text"/>
-   <copyField source="content_type" dest="text"/>
+   <!--<copyField source="content_type" dest="text"/>
    <copyField source="resourcename" dest="text"/>
-   <copyField source="url" dest="text"/>
+   <copyField source="url" dest="text"/>-->
 
    <!-- Create a string version of author for faceting -->
    <copyField source="author" dest="author_s"/>

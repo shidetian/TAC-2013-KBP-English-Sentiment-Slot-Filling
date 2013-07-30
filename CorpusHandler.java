@@ -5,9 +5,11 @@ import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrInputDocument;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xmlpull.v1.XmlPullParser;
 
-public class CorpusHandler extends DefaultHandler{
+public class CorpusHandler{
 	private HttpSolrServer server;
 	
 	SolrInputDocument currentDoc;
@@ -21,6 +23,10 @@ public class CorpusHandler extends DefaultHandler{
 	boolean inDocId = false;
 	boolean inContent = false;
 	boolean inPoster = false;
+	boolean inDate = false;
+	
+	//Vital, for your health
+	private boolean avoidDeath = false;
 	
 	CorpusHandler(HttpSolrServer server){
 		this.server = server;
@@ -33,6 +39,7 @@ public class CorpusHandler extends DefaultHandler{
 	}
 	
 	private void clear(){
+		currentDoc = null;
 		category = null;
 		baseID = null;
 		count = 0;
@@ -41,22 +48,22 @@ public class CorpusHandler extends DefaultHandler{
 		inPoster = false;
 	}
 	
-	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException{
+	public void startElement(XmlPullParser parser) throws Exception{
+		String qName = parser.getName();
 		if (qName.equalsIgnoreCase("DOC")){
 			if (currentDoc!=null){
-				throw new SAXException("Nested Document taggs. Input file has problems.\n");
+				throw new Exception("Nested Document taggs. Input file has problems.\n");
 			}else{
 				currentDoc = new SolrInputDocument();
-				switch (attributes.getLength()){
+				switch (parser.getAttributeCount()){
 					case 0: category = "web";
 							break;
 					case 1: category = "discussion";
-							baseID = attributes.getValue(0);
-							currentDoc.addField("id", attributes.getValue(0));
+							baseID = parser.getAttributeValue(0);
+							currentDoc.addField("id", parser.getAttributeValue(0));
 							break;
 					case 2: category = "news";
-							currentDoc.addField("id", attributes.getValue(0));
+							currentDoc.addField("id", parser.getAttributeValue(0));
 							//TODO: process news type attribute if needed
 							break; 
 				}
@@ -71,12 +78,11 @@ public class CorpusHandler extends DefaultHandler{
 			//TODO: process if this element is needed
 			//inDocType = true;
 		}else if (qName.equalsIgnoreCase("DATETIME")){
-			//inDateTime = true;
+			inDate = true;
 		}else if (qName.equalsIgnoreCase("DATELINE")){
-			//TODO: process if needed
-			//inDateTime = true;
+			inDate = true;
 		}else if (qName.equalsIgnoreCase("POSTDATE")){
-			//inDateTime = true;
+			inDate = true;
 		}else if (qName.equalsIgnoreCase("P")){
 			inContent = true;
 		}else if (qName.equalsIgnoreCase("headline")){
@@ -105,54 +111,67 @@ public class CorpusHandler extends DefaultHandler{
 			
 			currentDoc = new SolrInputDocument();
 			currentDoc.addField("category", category);
-			if (attributes.getQName(0).equalsIgnoreCase("author")){
+			if (parser.getAttributeCount()==3 && parser.getAttributeName(0).equalsIgnoreCase("author")){
 				assert(category.equals("discussion"));
-				currentDoc.addField("author", attributes.getValue(0));
+				currentDoc.addField("author", parser.getAttributeValue(0));
 				//Append post id to doc id
-				currentDoc.addField("id", baseID+"."+attributes.getValue(2));
+				currentDoc.addField("id", baseID+"."+parser.getAttributeValue(0));
 			}else{
 				assert(category.equals("web"));
 				//Append the poster number to the doc id
 				currentDoc.addField("id", baseID+"."+(count++));
 			}
-			if (category.equals("discussion")){
-				//TODO: datetime for discussions if needed
+			//TODO: datetime for discussions if needed
 			
-				inContent = true;
-			}
+			inContent = true;
 		}else if (qName.equalsIgnoreCase("POSTER")){
 			inPoster = true;
 		}else if (qName.equalsIgnoreCase("BODY")){	
 			//ignore since we populate fields inside
 		}else if (qName.equalsIgnoreCase("TEXT")){
 			//ignore since we populate fields inside
+		}else if (qName.equalsIgnoreCase("docs")){
+			//ignore
+		}else if (qName.equalsIgnoreCase("QUOTE")){
+			//Note: Hack so that we have the things before the quote tag due to not XML compliant quote tag crashing parser
+			if (category.equalsIgnoreCase("web")){
+				//currentDoc.addField("content", contentBuffer.toString());
+				endElement("post");
+			}
+		}else if (qName.equals("a")){
+			//ignore
+		}else if (qName.equals("img")){
+			//ignore
 		}else{
 			System.out.println("Unexpected node:"+qName);
 		}
 	}
 	
-	@Override
-	public void characters(char[] ch, int start, int length) throws SAXException{
+	//@Override
+	public void characters(String chars){
 		if (inDocId){
 			//currentDoc.addField("id", new String(ch, start, length));
 			//baseID = new String(ch, start, length);
-			otherBuffer.append(ch, start, length);
-		}else if (inContent){
-			contentBuffer.append(ch, start, length);
+			otherBuffer.append(chars.trim());
 		}else if (inPoster){
 			//currentDoc.addField("author", new String(ch, start, length));
 			//inPoster = false;
-			otherBuffer.append(ch, start, length);
+			otherBuffer.append(chars.trim());
+		}else if (inDate){
+			
+		}else if (inContent){
+			contentBuffer.append(chars.trim());
 		}
 	}
 	
-	@Override
-	public void endElement(String uri, String localName, String qName){
+	//@Override
+	public void endElement(String qName){
+		//String qName = parser.getName();
 		switch (qName.toLowerCase()){
 		case "post":
 		case "text":
 		case "headline":
-			currentDoc.addField("content", contentBuffer.toString());
+			currentDoc.addField("content", contentBuffer.toString().trim());
 			inContent = false;
 			//Depending on memory constraints and document sizes,
 			//maybe declare new one instead of virtual clear
@@ -164,9 +183,15 @@ public class CorpusHandler extends DefaultHandler{
 			otherBuffer.setLength(0);
 			break;
 		case "poster":
-			currentDoc.addField("author", otherBuffer.toString());
+			currentDoc.addField("author", otherBuffer.toString().trim());
 			inPoster = false;
 			otherBuffer.setLength(0);
+			break;
+		case "postdate":
+		case "dateline":
+		case "datetime":
+			otherBuffer.setLength(0);
+			inDate = false;
 			break;
 		case "doc":
 			assert(currentDoc!=null);

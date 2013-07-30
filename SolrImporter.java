@@ -1,4 +1,5 @@
 import java.io.ByteArrayInputStream;
+import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,6 +23,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 public class SolrImporter {
 	//Buffer documents so that we can batch commit
@@ -30,8 +34,8 @@ public class SolrImporter {
 	
 	
 	//Reads a (potentially gzip) file from corpus and all the documents within it
-	public static void readFileCorpus(HttpSolrServer server, SAXParserFactory factory, String file) throws UnsupportedEncodingException, FileNotFoundException, IOException, ParserConfigurationException, SAXException{
-		InputStreamReader full;
+	public static void readFileCorpus(HttpSolrServer server, XmlPullParserFactory factory, String file) throws Exception{
+		//InputStreamReader full;
 		InputStream raw;
 		//Simple test if file is gziped (not foolproof!)
 		//We must also enclose the input with a root node since the corpus doesn't have any :'(
@@ -53,12 +57,44 @@ public class SolrImporter {
 									new ByteArrayInputStream("</docs>".getBytes())
 							})));
 		}
-		full = new InputStreamReader(raw, "UTF-8");
-		InputSource in = new InputSource(full);
-		in.setEncoding("UFT-8");
+		//full = new InputStreamReader(raw, "UTF-8");
+		//InputSource in = new InputSource(full);
+		//in.setEncoding("UTF-8");
 		
-		SAXParser saxParser = factory.newSAXParser();
-		saxParser.parse(in , new CorpusHandler(server));
+		XmlPullParser pullParser = factory.newPullParser();
+		pullParser.setInput(raw, "UTF-8");
+		//saxParser.parse(in , new CorpusHandler(server));
+		//Use the XmlPullParser as a driver to the SAX compliant CorpusHandler
+		//Note that QName is probably not correct
+		CorpusHandler handler = new CorpusHandler(server);
+		int type = pullParser.getEventType();
+		while (type!=XmlPullParser.END_DOCUMENT){
+			switch(type){
+			case XmlPullParser.START_TAG:
+				/*if (pullParser.getName().equalsIgnoreCase("QUOTE")){
+					//Resolve issues with corpus being in xhtml and not xml, so the quote is not self closed
+					//TODO: process if needed
+					//Skip it
+					//pullParser.
+					int i = 0;
+					//break;
+				}*/
+				handler.startElement(pullParser);
+				break;
+			case XmlPullParser.END_TAG: handler.endElement(pullParser.getName()); break;
+			case XmlPullParser.TEXT: handler.characters(pullParser.getText()); break;
+			}
+			try{
+				type = pullParser.next();
+			}catch(XmlPullParserException e){
+				if (e.getMessage().contains("</DOC>")){
+					handler.endElement("doc");
+				}
+			}catch(EOFException e){
+				System.out.println("Warning: some quote related XML problems were fixed/ignored.\n");
+				break;
+			}
+		}
 	}
 	
 	public static void addDoc(HttpSolrServer server, SolrInputDocument doc) throws SolrServerException, IOException{
@@ -73,17 +109,23 @@ public class SolrImporter {
 		numNotCommitted = 0;
 	}
 	/**
-	 * @param args
+	 * @param args 
+	 * @throws XmlPullParserException 
 	 * @throws IOException 
 	 * @throws SolrServerException 
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) throws SolrServerException, IOException, ParserConfigurationException, SAXException {
+	public static void main(String[] args) throws XmlPullParserException, SolrServerException, IOException{
 		// TODO Auto-generated method stub
 		HttpSolrServer server = new HttpSolrServer("http://localhost:8983/solr");
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		readFileCorpus(server, factory, "C:\\Users\\Detian\\Documents\\GitHub\\TAC-2013-KBP-English-Sentiment-Slot-Filling\\DataSubset\\newswire.xml");
+		//SAXParserFactory factory = SAXParserFactory.newInstance();
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		try {
+			readFileCorpus(server, factory, "D:\\Dropbox\\NLP Research\\Corpus\\data\\English\\web\\eng-NG-31-1256.gz");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		forceCommit(server);
 	}
 
