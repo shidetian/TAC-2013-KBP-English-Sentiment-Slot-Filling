@@ -11,4 +11,8 @@ public enum Sentiment{
 		default: throw new IllegalArgumentException();
 		}
 	}
+	
+	public Sentiment fromString(String s){
+		return Sentiment.valueOf(s.replaceAll("-", "_"));
+	}
 }

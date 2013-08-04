@@ -23,8 +23,7 @@ public class OutputWriter {
 	//Writes the responses to the specified file, with the most confident responses first if inOrder
 	public void write(String filename, boolean inOrder) throws IOException{
 		BufferedWriter out = new BufferedWriter(new FileWriter(new File(filename)));
-		Response[] temp = new Response[outList.size()];
-		temp = (Response[]) outList.toArray(temp);
+		Response[] temp = outList.toArray(new Response[outList.size()]);
 		if (inOrder){
 			Arrays.sort(temp);
 		}
