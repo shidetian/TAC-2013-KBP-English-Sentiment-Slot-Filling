@@ -18,7 +18,7 @@ public class QueryReader {
 		doc.normalizeDocument();
 		
 		if (!doc.getDocumentElement().getNodeName().equals("kbpsentslotfill")){
-			System.out.println("Root element not kbpsentslotfill. Wrong file?");
+			System.err.println("Root element not kbpsentslotfill. Wrong file?");
 			return null;
 		}
 		
@@ -39,7 +39,7 @@ public class QueryReader {
 				Sentiment sent = Sentiment.fromString(temp.getElementsByTagName("slot").item(0).getTextContent());
 				out.add(new Query(qId, entity, docId, entityOffsets, entityType, nodeId, sent));
 			}else{
-				System.out.println("Extraneous node. Should not happen");
+				System.err.println("Extraneous node. Should not happen");
 			}
 		}
 		return out;

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class Query {
 	String qId;
@@ -7,6 +9,9 @@ public class Query {
 	String entityType;
 	String nodeId;
 	Sentiment sent;
+	
+	//If this field is null, that means that no lookups have been performed, and coref, etc system will be run on first call to getAltNames()
+	ArrayList<String> altNames;
 	public Query(String qId, String ent, String docId, String entOffset, String entType, String nodeId, Sentiment s){
 		this.qId = qId;
 		entity = ent;
@@ -15,5 +20,22 @@ public class Query {
 		entityType = entType;
 		this.nodeId = nodeId;
 		sent = s;
+		
+		altNames = null;
+	}
+	
+	//altNames is "lazy", it will not be initialized until first call
+	public ArrayList<String> getAltNames(boolean corefs){
+		if (altNames == null){
+			altNames = new ArrayList<String>();
+			if (nodeId.charAt(0)=='E'){
+				//TODO lookup in KB
+			}
+			
+			if (corefs){
+				//TODO lookup in corefs
+			}
+		}
+		return altNames;
 	}
 }
