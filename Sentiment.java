@@ -1,12 +1,12 @@
 public enum Sentiment{
-	pos_toward, pos_from, neg_toward, neg_from;
+	pos_towards, pos_from, neg_towards, neg_from;
 	
 	@Override
 	public String toString(){
 		switch(this){
-		case pos_toward: return "pos-toward"; 
+		case pos_towards: return "pos-towards"; 
 		case pos_from: return "pos-from"; 
-		case neg_toward: return "neg-toward"; 
+		case neg_towards: return "neg-towards"; 
 		case neg_from: return "neg-from";
 		default: throw new IllegalArgumentException();
 		}

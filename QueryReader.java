@@ -36,12 +36,23 @@ public class QueryReader {
 										temp.getElementsByTagName("end").item(0).getTextContent();
 				String entityType = temp.getElementsByTagName("enttype").item(0).getTextContent();
 				String nodeId = temp.getElementsByTagName("nodeid").item(0).getTextContent();
-				Sentiment sent = Sentiment.valueOf(temp.getElementsByTagName("slot").item(0).getTextContent().replaceAll("-", "_"));
+				Sentiment sent = Sentiment.fromString(temp.getElementsByTagName("slot").item(0).getTextContent());
 				out.add(new Query(qId, entity, docId, entityOffsets, entityType, nodeId, sent));
 			}else{
 				System.out.println("Extraneous node. Should not happen");
 			}
 		}
 		return out;
+	}
+	
+	//this is an example
+	public static void main(String[] args){
+		try {
+			ArrayList<Query> qs = QueryReader.parseFile("tac_2013_kbp_sentiment_slot_filling_sample_queries.xml");
+			qs.size();
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
