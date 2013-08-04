@@ -12,15 +12,29 @@ public class Response implements Comparable<Response>{
 	public double confidence = 1;
 	
 	Response(String qid, Sentiment s, String tid, String jid, String e, String feo, String qeo, String jo, double c){
+		if (!(validateOffset(feo)&&validateOffset(qeo)&&validateOffset(jo))){
+			System.err.println("One or more of the offsets are malformed");
+		}
 		qId = qid;
 		sent = s;
 		teamId = tid;
-		jid = justId;
+		justId = jid;
 		entity = e;
 		fillerEntityOffsets = feo;
-		queryEnittyOffsets = qeo;
+		queryEntityOffsets = qeo;
 		justificationOffsets = jo;
 		confidence = c;
+	}
+	
+	//Returns whether an offset is properly formated
+	public static boolean validateOffset(String s){
+		String[] parts = s.split(",");
+		for (String part : parts){
+			if (part.split("-").length!=2){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override
