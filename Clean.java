@@ -87,7 +87,11 @@ public class Clean {
 				//From: Louise Horio
 				//Sent: Monday, February 25, 2008 8:23 PM
 				//To: Louise Reda Horio
-				Pattern infoPattern = Pattern.compile("^((From:)|(Sent:)|(To:)).*");
+				// What if the opinion is in the quoted message and the holder is the message sender?
+				// So I delete From:... here, not to remove them
+				
+				//Pattern infoPattern = Pattern.compile("^((From:)|(Sent:)|(To:)).*");
+				Pattern infoPattern = Pattern.compile("^(Sent:)|(To:)).*");
 				Matcher infoMatcher = infoPattern.matcher(line);
 				while (infoMatcher.find()){
 					String spaceSpan = "";
