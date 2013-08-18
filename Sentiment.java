@@ -12,7 +12,7 @@ public enum Sentiment{
 		}
 	}
 	
-	public Sentiment fromString(String s){
+	public static Sentiment fromString(String s){
 		return Sentiment.valueOf(s.replaceAll("-", "_"));
 	}
 }
