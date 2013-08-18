@@ -7,3 +7,5 @@
 
 /solr-4.4.0/*
 /solrHome/collection1/data/*
+
+!/TAC SSF/lib/*
