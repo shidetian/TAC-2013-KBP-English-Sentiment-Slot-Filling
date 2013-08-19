@@ -118,11 +118,11 @@ public class SolrImporter {
 	 */
 	public static void main(String[] args) throws XmlPullParserException, SolrServerException, IOException{
 		// TODO Auto-generated method stub
-		HttpSolrServer server = new HttpSolrServer("http://localhost:8983/solr");
+		HttpSolrServer server = new HttpSolrServer("http://ec2-23-20-151-240.compute-1.amazonaws.com:8983/solr/");
 		//SAXParserFactory factory = SAXParserFactory.newInstance();
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 		try {
-			//readFileCorpus(server, factory, "D:\\Dropbox\\NLP Research\\Corpus\\data\\English\\web\\eng-NG-31-1256.gz");
+			//readFileCorpus(server, factory, "C:\\Users\\user\\Dropbox\\NLP Research\\Corpus\\data\\English\\web\\eng-NG-31-1256.gz");
 			File input = new File(args[0]);
 			File[] inputs;
 			if (input.isDirectory()){
@@ -132,7 +132,7 @@ public class SolrImporter {
 				inputs[0] = input;
 			}
 			for (File f : inputs){
-				if (f.isFile()){
+				if (!f.isDirectory()){
 					readFileCorpus(server, factory, f.getAbsolutePath());
 					System.out.println(f.getName()+ " has been imported.");
 					forceCommit(server);
