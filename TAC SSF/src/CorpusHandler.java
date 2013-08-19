@@ -26,7 +26,7 @@ public class CorpusHandler{
 	boolean inDate = false;
 	
 	//Vital, for your health
-	private boolean avoidDeath = false;
+	//private boolean avoidDeath = false;
 	
 	CorpusHandler(HttpSolrServer server){
 		this.server = server;
