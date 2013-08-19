@@ -1,5 +1,6 @@
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -122,7 +123,21 @@ public class SolrImporter {
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 		try {
 			//readFileCorpus(server, factory, "D:\\Dropbox\\NLP Research\\Corpus\\data\\English\\web\\eng-NG-31-1256.gz");
-			readFileCorpus(server, factory, "C:\\Users\\Detian\\Documents\\GitHub\\TAC-2013-KBP-English-Sentiment-Slot-Filling\\DataSubset\\discussions.xml");
+			File input = new File(args[0]);
+			File[] inputs;
+			if (input.isDirectory()){
+				inputs = input.listFiles();
+			}else{
+				inputs = new File[1];
+				inputs[0] = input;
+			}
+			for (File f : inputs){
+				if (f.isFile()){
+					readFileCorpus(server, factory, f.getAbsolutePath());
+					System.out.println(f.getName()+ " has been imported.");
+					forceCommit(server);
+				}
+			}
 			//readFileCorpus(server, factory, "D:\\Dropbox\\NLP Research\\Resources\\LDC2013E61_TAC_2013_KBP_English_Sentiment_Slot_Filling_Sample_Queries_and_Annotations\\data\\tac_2013_kpb_ssf_sample_documents.xml");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
