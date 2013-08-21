@@ -12,9 +12,9 @@ public class SentenceSplitter {
 
 	private MaxentTagger tagger;
 	
-	public SentenceSplitter(String path){
+	public SentenceSplitter(){
 		try {
-			this.tagger = new MaxentTagger(path);
+			this.tagger = new MaxentTagger("edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger");
 		} catch (ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
