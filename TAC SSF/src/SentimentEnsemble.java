@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class SentimentEnsemble{
 	
-	public ArrayList<Response> sentimentList;
-	public ArrayList<Response> sentimentListEnsembled;
+	public ArrayList<SentimentUnit> sentimentList;
+	public ArrayList<SentimentUnit> sentimentListEnsembled;
 	
 	public SentimentEnsemble(){
 		this.sentimentList = new ArrayList<Response>();
@@ -20,9 +20,8 @@ public class SentimentEnsemble{
 		BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
             	while ((String line=br.readLines())!= null){
             		String[] a = line.split("\t");
-            		this.sentimentList.add(new Response(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],(double) a[9] ));
+            		this.sentimentList.add(new Response(a[0],a[1],a[2],a[3],a[4],a[5],(double) a[6]));
             	}
-            	writer.write("output", true);
             	br.close();
 	}
 	
