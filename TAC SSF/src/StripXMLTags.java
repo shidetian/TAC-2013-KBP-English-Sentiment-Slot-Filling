@@ -11,19 +11,25 @@ import org.apache.commons.lang3.StringUtils;
 
 public class StripXMLTags {
 
-	//Replace all xml tags in a document with spaces
-	public static void stripFileCorpus(File file) throws Exception {
-		String raw = ShowTextForOffsets.readRaw(file);
+	public static StringBuffer strip(String s){
 		//Source: http://stackoverflow.com/questions/1334676/use-regexp-to-replace-xml-tags-with-whitespaces-in-the-length-of-the-tags
 		Pattern p = Pattern.compile("<[^>]+>");
-		Matcher m = p.matcher(raw);
+		Matcher m = p.matcher(s);
 		StringBuffer stripped= new StringBuffer();
 		while (m.find()) {
 			String spaces= StringUtils.repeat(" ", m.end()-m.start());
 			m.appendReplacement(stripped, spaces);
 		}
 		m.appendTail(stripped);
+		return stripped;
+	}
+
+	//Replace all xml tags in a document with spaces
+	public static void stripFileCorpus(File file) throws Exception {
+		String raw = ShowTextForOffsets.readRaw(file);
 		
+		StringBuffer stripped = strip(raw);
+
 		if (verify(raw, stripped)==-1){
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(new File(file.getAbsolutePath()+"_stripped")))));
 			for (int i = 0; i< stripped.length(); i++){
@@ -34,7 +40,7 @@ public class StripXMLTags {
 			System.out.println("Test failed. Offsets do not match. Contact Detian.");
 		}
 	}
-	
+
 	//Check to see if a==b for all indexes of b that is not a space
 	//-1 if same or the first index diff
 	public static int verify(String a, StringBuffer b){
