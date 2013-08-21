@@ -3,6 +3,8 @@
 // For any two sentiment units sharing the same holder and target, 
 // the output will be only one
 
+// Finally it will generate a list of non-duplicate sentiment units
+
 import java.util.ArrayList;
 
 public class SentimentEnsemble{
