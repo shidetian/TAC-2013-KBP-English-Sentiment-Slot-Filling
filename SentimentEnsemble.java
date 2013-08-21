@@ -11,13 +11,19 @@ public class SentimentEnsemble{
 	public ArrayList<SentimentUnit> sentimentListEnsembled;
 	
 	public SentimentEnsemble(){
-		this.sentimentList = new ArrayList<SentimentUnit>();
-		this.sentimentListEnsembled = new ArrayList<SentimentUnit>();
+		this.sentimentList = new ArrayList<Response>();
+		this.sentimentListEnsembled = new ArrayList<Response>();
 	}
 	
 	// add a list of sentiment unit
-	public void addSentimentUnitList(ArrayList<SentimentUnit> suList){
-		this.sentimentList.addAll(suList);
+	public void addSentimentFile(String filename){
+		BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
+            	while ((String line=br.readLines())!= null){
+            		String[] a = line.split("\t");
+            		this.sentimentList.add(new Response(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],(double) a[9] ));
+            	}
+            	writer.write("output", true);
+            	br.close();
 	}
 	
 	public void ensemble(){
