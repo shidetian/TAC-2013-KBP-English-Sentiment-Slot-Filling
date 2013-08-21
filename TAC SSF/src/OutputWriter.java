@@ -74,7 +74,8 @@ public class OutputWriter {
 	public static void main(String[] args) throws IOException{
 		OutputWriter writer = new OutputWriter();
 		
-		writer.addResponse(MatchQuery(SentimentEnsemble("Cornell_output.txt","Pitt_output.txt").sentimentListEnsembled, Query)).response);
+		//The next line is a sample to call all functions and return a Response class added to writer
+		//writer.addResponse(MatchQuery(SentimentEnsemble("Cornell_output.txt","Pitt_output.txt").sentimentListEnsembled, Query)).response);
 		
 		//This is from the first sample response
 		writer.addResponse(new Response("SSF_ENG_001", Sentiment.neg_from, "CORNELL", "bolt-eng-DF-170-181109-8867106", "whitehall", "5111-5119", "5287-5289", "5283-5401", 0.9));
