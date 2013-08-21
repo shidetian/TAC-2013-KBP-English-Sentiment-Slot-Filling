@@ -10,11 +10,11 @@ public class MatchQuery{
 		// which the sentiment unit is in accordance with query
 		// that means 
 		// 1) when the query type is "pos/neg-from", the query is the target and the filler is the holder
-		if (query.slot.contains("from") && query.name.equals(su.targetSpan)){
+		if (query.sent.toString.contains("from") && query.entity.equals(su.targetSpan)){
 			filler = su.holderSpan;
 		}
 		// 2) when the query type is "pos/neg-towards", the query is the holder and the filler is the target
-		else if (query.slot.contains("towards") && query.name.equals(su.holderSpan)){
+		else if (query.sent.toString.contains("towards") && query.entity.equals(su.holderSpan)){
 			filler = su.targetSpan;
 		}
 		
