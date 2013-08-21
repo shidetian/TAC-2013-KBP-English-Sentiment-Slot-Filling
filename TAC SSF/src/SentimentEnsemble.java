@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class SentimentEnsemble{
 	
-	public ArrayList<SentimentUnit> sentimentList;
-	public ArrayList<SentimentUnit> sentimentListEnsembled;
+	public ArrayList<Response> sentimentList;
+	public ArrayList<Response> sentimentListEnsembled;
 	
 	public SentimentEnsemble(){
 		this.sentimentList = new ArrayList<Response>();
