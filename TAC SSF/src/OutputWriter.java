@@ -53,22 +53,6 @@ public class OutputWriter {
 		}
 		out.close();
 	}
-	
-	/*
-	//Input is an output file from sentiment analysis system
-	//The format of output from sentiment system
- 	//is a newline delimited list of tab delimited columns
-    	public void addSentimentFile(String filename){
-    		OutputWriter writer = new OutputWriter();
-        
-            	BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
-            	while ((String line=br.readLines())!= null){
-            		String[] a = line.split("\t");
-            		writer.addResponse(new Response(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],(double) a[9] ));
-            	}
-            	writer.write("output", true);
-            	br.close();
-        }*/
         
 	//This main method is just for example
 	public static void main(String[] args) throws IOException{
