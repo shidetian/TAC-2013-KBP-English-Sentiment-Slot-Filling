@@ -5,6 +5,10 @@ import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
+ *
+ * Version 1.2, July 25, 2013
+ * Fixed crash when entity or justification offsets are empty
+ *
  * Version 1.1, July 11, 2013
  * Added support for TSF outputs
  *
@@ -260,6 +264,10 @@ public class ShowTextForOffsets {
 
   static List<Offset> parseOffsets(String offsetsString) {
     List<Offset> offsets = new ArrayList<Offset>();
+    if(offsetsString == null) return offsets;
+    // System.err.println("Parsing string [" + offsetsString + "]");
+    offsetsString = offsetsString.trim();
+    if(offsetsString.length() == 0) return offsets;
     String [] bits = offsetsString.split(",");
     if(bits.length > 0) {
       for(String bit: bits) {
