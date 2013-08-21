@@ -11,8 +11,8 @@ public class SentimentEnsemble{
 	public ArrayList<SentimentUnit> sentimentListEnsembled;
 	
 	public SentimentEnsemble(){
-		this.sentimentList = new ArrayList<Response>();
-		this.sentimentListEnsembled = new ArrayList<Response>();
+		this.sentimentList = new ArrayList<SentimentUnit>();
+		this.sentimentListEnsembled = new ArrayList<SentimentUnit>();
 	}
 	
 	// add a list of sentiment unit
@@ -20,7 +20,7 @@ public class SentimentEnsemble{
 		BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
             	while ((String line=br.readLines())!= null){
             		String[] a = line.split("\t");
-            		this.sentimentList.add(new Response(a[0],a[1],a[2],a[3],a[4],a[5],(double) a[6]));
+            		this.sentimentList.add(new SentimentUnit(a[0],a[1],a[2],a[3],a[4],a[5],(double) a[6]));
             	}
             	br.close();
 	}
