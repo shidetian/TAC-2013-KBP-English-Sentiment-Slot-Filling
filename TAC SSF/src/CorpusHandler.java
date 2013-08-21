@@ -48,7 +48,7 @@ public class CorpusHandler{
 		inPoster = false;
 	}
 	
-	public void startElement(XmlPullParser parser) throws Exception{
+	public void startElement(XmlPullParser parser, String wholeDoc) throws Exception{
 		String qName = parser.getName();
 		if (qName.equalsIgnoreCase("DOC")){
 			if (currentDoc!=null){
@@ -68,6 +68,7 @@ public class CorpusHandler{
 							break; 
 				}
 				currentDoc.addField("category", category);
+				currentDoc.addField("whole_text", wholeDoc);
 				
 			}
 		}else if (qName.equalsIgnoreCase("DOCID")){
@@ -134,10 +135,10 @@ public class CorpusHandler{
 			//ignore
 		}else if (qName.equalsIgnoreCase("QUOTE")){
 			//Note: Hack so that we have the things before the quote tag due to not XML compliant quote tag crashing parser
-			if (category.equalsIgnoreCase("web")){
+			/*if (category.equalsIgnoreCase("web")){
 				//currentDoc.addField("content", contentBuffer.toString());
 				endElement("post");
-			}
+			}*/
 		}else if (qName.equals("a")){
 			//ignore
 		}else if (qName.equals("img")){

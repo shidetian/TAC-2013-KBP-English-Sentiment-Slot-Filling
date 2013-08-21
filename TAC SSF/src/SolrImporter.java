@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.SequenceInputStream;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,11 +33,11 @@ public class SolrImporter {
 	//Buffer documents so that we can batch commit
 	//private static ArrayList<SolrInputDocument> serverCommitBuffer = new ArrayList<SolrInputDocument>();
 	private static int numNotCommitted = 0;
-	
-	
+
+
 	//Reads a (potentially gzip) file from corpus and all the documents within it
 	public static void readFileCorpus(HttpSolrServer server, XmlPullParserFactory factory, String file) throws Exception{
-		//InputStreamReader full;
+		/*//InputStreamReader full;
 		InputStream raw;
 		//Simple test if file is gziped (not foolproof!)
 		//We must also enclose the input with a root node since the corpus doesn't have any :'(
@@ -59,19 +60,24 @@ public class SolrImporter {
 		}
 		//full = new InputStreamReader(raw, "UTF-8");
 		//InputSource in = new InputSource(full);
-		//in.setEncoding("UTF-8");
-		
+		//in.setEncoding("UTF-8");*/
+
+		DocumentSplitter ds = new DocumentSplitter(new GZIPInputStream(new FileInputStream(file)));
+
 		XmlPullParser pullParser = factory.newPullParser();
-		pullParser.setInput(raw, "UTF-8");
-		//saxParser.parse(in , new CorpusHandler(server));
-		//Use the XmlPullParser as a driver to the SAX compliant CorpusHandler
-		//Note that QName is probably not correct
-		CorpusHandler handler = new CorpusHandler(server);
-		int type = pullParser.getEventType();
-		while (type!=XmlPullParser.END_DOCUMENT){
-			switch(type){
-			case XmlPullParser.START_TAG:
-				/*if (pullParser.getName().equalsIgnoreCase("QUOTE")){
+		String current;
+		while ((current=ds.getNext())!=null){
+			//pullParser.setInput(raw, "UTF-8");
+			pullParser.setInput(new StringReader(StripXMLTags.fix(current).toString()));
+			//saxParser.parse(in , new CorpusHandler(server));
+			//Use the XmlPullParser as a driver to the SAX compliant CorpusHandler
+			//Note that QName is probably not correct
+			CorpusHandler handler = new CorpusHandler(server);
+			int type = pullParser.getEventType();
+			while (type!=XmlPullParser.END_DOCUMENT){
+				switch(type){
+				case XmlPullParser.START_TAG:
+					/*if (pullParser.getName().equalsIgnoreCase("QUOTE")){
 					//Resolve issues with corpus being in xhtml and not xml, so the quote is not self closed
 					//TODO: process if needed
 					//Skip it
@@ -79,31 +85,33 @@ public class SolrImporter {
 					int i = 0;
 					//break;
 				}*/
-				handler.startElement(pullParser);
-				break;
-			case XmlPullParser.END_TAG: handler.endElement(pullParser.getName()); break;
-			case XmlPullParser.TEXT: handler.characters(pullParser.getText()); break;
-			}
-			try{
-				type = pullParser.next();
-			}catch(XmlPullParserException e){
-				if (e.getMessage().contains("</DOC>")){
-					handler.endElement("doc");
+					handler.startElement(pullParser, StripXMLTags.strip(current).toString());
+					break;
+				case XmlPullParser.END_TAG: handler.endElement(pullParser.getName()); break;
+				case XmlPullParser.TEXT: handler.characters(pullParser.getText()); break;
 				}
-			}catch(EOFException e){
-				System.out.println("Warning: some quote related XML problems were fixed/ignored.\n");
-				break;
+				try{
+					type = pullParser.next();
+				}catch(XmlPullParserException e){
+					/*if (e.getMessage().contains("</DOC>")){
+						handler.endElement("doc");
+					}*/
+					throw e; //fixed, shouldn't throw error anymore
+				}catch(EOFException e){
+					System.out.println("Warning: some quote related XML problems were fixed/ignored. This shouldn't happen\n");
+					break;
+				}
 			}
 		}
 	}
-	
+
 	public static void addDoc(HttpSolrServer server, SolrInputDocument doc) throws SolrServerException, IOException{
 		server.add(doc);
 		if (numNotCommitted>100){
 			forceCommit(server);
 		}
 	}
-	
+
 	public static void forceCommit(HttpSolrServer server) throws SolrServerException, IOException{
 		server.commit();
 		numNotCommitted = 0;
