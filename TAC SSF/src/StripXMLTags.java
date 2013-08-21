@@ -10,6 +10,41 @@ import org.apache.commons.lang3.StringUtils;
 
 
 public class StripXMLTags {
+	
+	
+	public static StringBuffer fix(String s){
+		Pattern p = Pattern.compile("<QUOTE[^>]+>");
+		Matcher m = p.matcher(s);
+		StringBuffer fixed= new StringBuffer();
+		while (m.find()) {
+			String spaces= StringUtils.repeat(" ", m.end()-m.start());
+			/*String temp = m.group();
+			//System.out.println(temp+"+++");
+			if (temp!="")
+				temp = "<QUOTE"+ temp.substring(6, temp.length()-2).replaceAll("\"", " ") + "/>".replace("QUOTE", "quote");
+			if (temp.length()!=spaces.length())
+				System.out.println("bad");*/
+			m.appendReplacement(fixed, spaces);
+		}
+		m.appendTail(fixed);
+		return fixed;
+	}
+	//Method to make the non-compliant QUOTE tag in web compliant by self closing the quote tag
+		public static void fixFileCorpus(File file) throws Exception {
+			String raw = ShowTextForOffsets.readRaw(file);
+			
+			StringBuffer fixed = fix(raw);
+			int temp = 0;
+			if ((temp = verify(raw, fixed))==-1){
+				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(new File(file.getAbsolutePath()+"_fixed")))));
+				for (int i = 0; i< fixed.length(); i++){
+					out.write(fixed.charAt(i));
+				}
+				out.close();
+			}else{
+				System.out.println("Test failed at "+ temp +". Offsets do not match. Contact Detian.");
+			}
+		}
 
 	public static StringBuffer strip(String s){
 		//Source: http://stackoverflow.com/questions/1334676/use-regexp-to-replace-xml-tags-with-whitespaces-in-the-length-of-the-tags
@@ -49,9 +84,10 @@ public class StripXMLTags {
 		}
 
 		for (int i =0; i<a.length(); i++){
-			if (a.charAt(i)==b.charAt(i) || b.charAt(i)==' '){
+			if (a.charAt(i)==b.charAt(i) || b.charAt(i)==' ' || b.charAt(i)=='/'){
 				continue;
 			}else{
+				System.out.println(a.charAt(i)+" vs "+b.charAt(i));
 				return i;
 			}
 		}
@@ -69,7 +105,7 @@ public class StripXMLTags {
 		}
 		for (File f : inputs){
 			if (!f.isDirectory()){
-				stripFileCorpus(f);
+				fixFileCorpus(f);
 				System.out.println(f.getName()+ " has been stripped.");
 			}
 		}

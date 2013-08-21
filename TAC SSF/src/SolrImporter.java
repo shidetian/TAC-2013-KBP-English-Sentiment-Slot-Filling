@@ -48,7 +48,6 @@ public class SolrImporter {
 									new GZIPInputStream(new FileInputStream(file)),
 									new ByteArrayInputStream("</docs>".getBytes())
 							})));
-			//new InputStream(new GZIPInputStream(new FileInputStream(file)), "UTF-8");
 		}else{
 			raw = new SequenceInputStream(
 					Collections.enumeration(Arrays.asList(
