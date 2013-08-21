@@ -10,9 +10,12 @@ public class SentimentEnsemble{
 	public ArrayList<SentimentUnit> sentimentList;
 	public ArrayList<SentimentUnit> sentimentListEnsembled;
 	
-	public SentimentEnsemble(){
+	public SentimentEnsemble(String cornellFile, String pittFile){
 		this.sentimentList = new ArrayList<SentimentUnit>();
 		this.sentimentListEnsembled = new ArrayList<SentimentUnit>();
+		
+		addSentimentFile(cornellFile);
+		addSentimentFile(pittFile);
 	}
 	
 	// add a list of sentiment unit
