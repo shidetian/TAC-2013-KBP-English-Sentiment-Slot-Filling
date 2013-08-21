@@ -57,7 +57,7 @@ public class OutputWriter {
 	//Input is an output file from sentiment analysis system
 	//The format of output from sentiment system
  	//is a newline delimited list of tab delimited columns
-    	public void addOutputFile(String filename){
+    	public void addSentimentFile(String filename){
     		OutputWriter writer = new OutputWriter();
         
             	BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
