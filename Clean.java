@@ -126,6 +126,7 @@ public class Clean {
 					System.out.println(outputLine+"...");
 				}
 				
+				/*
 				//file, such as Funzug.org_3.jpg
 				Pattern fileNamePattern = Pattern.compile("[a-zA-Z0-9\\._]+\\.[a-z]+");
 				Matcher fileNameMatcher = fileNamePattern.matcher(line);
@@ -136,7 +137,7 @@ public class Clean {
 					outputLine = outputLine.replace(fileNameMatcher.group(), spaceSpan);
 					System.out.println(line+"...");
 					System.out.println(outputLine+"...");
-				}
+				}*/
 				
 				
 			}
