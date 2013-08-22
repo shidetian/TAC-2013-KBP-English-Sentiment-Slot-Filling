@@ -3,10 +3,6 @@ import java.io.IOException;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrInputDocument;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
 import org.xmlpull.v1.XmlPullParser;
 
 public class CorpusHandler{
@@ -69,6 +65,9 @@ public class CorpusHandler{
 				}
 				currentDoc.addField("category", category);
 				currentDoc.addField("whole_text", wholeDoc);
+				if (category.equals("web")){
+					//TODO: call clean
+				}
 				String[] preprocess = Preprocessor.Tokenize(StripXMLTags.strip(wholeDoc).toString());
 				currentDoc.addField("offsets", preprocess[0]);
 				currentDoc.addField("tokens", preprocess[1]);
