@@ -25,8 +25,11 @@ public class HTDetection {
 		lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
 	}
 	
-	public HashMap<String, String> process(Sentence sent, HashSet<String> opinterms){
+	public HashMap<String, String> process(Sentence sent, HashSet<String> terms){
 		HashMap<String, String> ht = new HashMap<String, String>();
+		HashMap<String, String> opinterms = new HashMap<String, String>();
+		for(String term : terms)
+			opinterms.put(term, term);
 		
 		List<TypedDependency> tdl = parsing(sent.sent);
 		HashMap<String, String> Scandidates = findCandidates(tdl, opinterms, "subj");
@@ -66,7 +69,7 @@ public class HTDetection {
 				String hSpan = "";
 				String tSpan = Integer.toString(sent.sent.indexOf(subj)+sent.beg).concat("-").concat(Integer.toString(sent.sent.indexOf(subj)+sent.beg+subj.length()));;
 				ht.put(Sopin, oSpan.concat("\t").concat(hSpan).concat("\t").concat(tSpan));
-				
+				//System.out.println("Sopin : " + Sopin);
 				//String p = polarity.get(Sopin); 
 				//senti.add(new SentimentUnit(sSpan, oSpan, hSpan, tSpan, p, 0));
 			}
@@ -74,16 +77,22 @@ public class HTDetection {
 		return ht;
 	}
 	
-	public static HashMap<String, String> findCandidates(List<TypedDependency> tdl, HashSet<String> terms, String type){
+	public static HashMap<String, String> findCandidates(List<TypedDependency> tdl, HashMap<String, String> terms, String type){
 		HashMap<String, String> candidates = new HashMap<String, String>();
 		int cnt = 0;
 		
 		while((cnt++) < 5){
 			HashMap<String, String> newterms = new HashMap<String, String>();
-			for(String term : terms){
-				HashMap<String, String> parents = getParents(term, tdl);
-				HashMap<String, String> children = getChildren(term, tdl);
+			Set<String> keyset = terms.keySet();
+			Iterator<String> iter = keyset.iterator();
+					
+			while(iter.hasNext()){
+				String term = iter.next();
+				String orig = terms.get(term);
+				HashMap<String, String> parents = getParents(term, orig, tdl);
+				HashMap<String, String> children = getChildren(term, orig, tdl);
 				//System.out.println("Parent: " + parents);
+				//System.out.println("Children: " + children);
 				candidates.putAll(checkType(type, parents, tdl));
 				candidates.putAll(checkType(type, children, tdl));
 				newterms.putAll(parents);
@@ -98,12 +107,7 @@ public class HTDetection {
 			if(newterms.size() <= 0)
 				break;
 			else{
-				terms = new HashSet<String>();
-				Set<String> keyset = newterms.keySet();
-				Iterator<String> iter = keyset.iterator();
-				while(iter.hasNext()){
-					terms.add(iter.next());
-				}
+				terms = newterms;
 			}
 			
 			//System.out.println("new terms : " + terms);
@@ -133,26 +137,26 @@ public class HTDetection {
 		return keyset;
 	}
 	
-	public static HashMap<String, String> getParents(String term, List<TypedDependency> tdl){
+	public static HashMap<String, String> getParents(String term, String orig, List<TypedDependency> tdl){
 		HashMap<String, String> parents = new HashMap<String, String>();
 		
 		for(TypedDependency td : tdl){
 			String[] toks = td.toString().split("[()-, ]+");
 			if(toks[2].contains(term)){
-				parents.put(toks[1], term);
+				parents.put(toks[1], orig);
 			}
 		}
 		
 		return parents;
 	}
 
-	public static HashMap<String, String> getChildren(String term, List<TypedDependency> tdl){
+	public static HashMap<String, String> getChildren(String term, String orig, List<TypedDependency> tdl){
 		HashMap<String, String> children = new HashMap<String, String>();
 		
 		for(TypedDependency td : tdl){
 			String[] toks = td.toString().split("[()-, ]+");
 			if(toks[1].contains(term)){
-				children.put(toks[2], term);
+				children.put(toks[2], orig);
 			}
 		}
 		
@@ -170,7 +174,7 @@ public class HTDetection {
 		GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
 		List<TypedDependency> tdl = gs.typedDependenciesCCprocessed();
 		
-		System.out.println("  " + tdl.toString());
+		//System.out.println("  " + tdl.toString());
 		
 		return tdl;
 	}
