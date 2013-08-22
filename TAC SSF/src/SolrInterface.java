@@ -12,21 +12,33 @@ import edu.stanford.nlp.trees.Tree;
 public class SolrInterface {
 	static HttpSolrServer server = new HttpSolrServer("http://ec2-23-20-151-240.compute-1.amazonaws.com:8983/solr/");
 	
+	public static String getOriginalId(String id){
+		if (id.contains(".")){
+			if (id.charAt(id.indexOf('.'))=='0'){
+				return id;
+			}else return id.substring(0, id.indexOf('.'));
+		}else{
+			return id;
+		}
+	}
+	
 	public static String getRawDocument(String id) throws SolrServerException{
 		SolrQuery query = new SolrQuery();
-		if (id.contains(".")){
-			id = id.substring(0, id.indexOf('.'));
-		}
-		query.setQuery("id:"+id);
+		query.setQuery("id:"+getOriginalId(id));
 		query.setStart(0);
 		query.setFields("whole_text");
 		
 		QueryResponse response = server.query(query);
 		SolrDocumentList results = response.getResults();
-	    for (int i = 0; i < results.size(); ++i) {
-	    	return (String) results.get(i).getFieldValue("whole_text");
-	    }
-	    return null;
+		if (results.size()==0){
+			//Hack to get news
+			query.setQuery("id:"+id);
+			response = server.query(query);
+			results = response.getResults();
+			return results.size()==0?null:(String) results.get(0).getFieldValue("whole_text");
+		}else{
+			return (String) results.get(0).getFieldValue("whole_text");
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -35,19 +47,20 @@ public class SolrInterface {
 		if (id.contains(".")){
 			id = id.substring(0, id.indexOf('.'));
 		}
-		query.setQuery("id:"+id);
+		query.setQuery("id:"+getOriginalId(id));
 		query.setStart(0);
 		query.setFields("offsets", "tokens", "tree");
 		
 		QueryResponse response = server.query(query);
 		SolrDocumentList results = response.getResults();
-	    for (int i = 0; i < results.size(); i++) {
-	    	return new ProcessedDocument((String) results.get(i).getFieldValue("offsets"),
-	    						(String) results.get(i).getFieldValue("tokens"),
-	    						(ArrayList<Tree>) Preprocessor.fromBase64(((byte[]) results.get(i).getFieldValue("tree")))
+	    if (results.size()>0) {
+	    	return new ProcessedDocument((String) results.get(0).getFieldValue("offsets"),
+	    						(String) results.get(0).getFieldValue("tokens"),
+	    						(ArrayList<Tree>) Preprocessor.fromBase64(((byte[]) results.get(0).getFieldValue("tree")))
 	    	);
+	    }else{
+	    	return null;
 	    }
-	    return null;
 	}
 	
 	public static ArrayList<String> getByTexualSearch(String s) throws SolrServerException{
@@ -62,9 +75,9 @@ public class SolrInterface {
 		ArrayList<String> ids = new ArrayList<String>(results.size());
 	    for (int i = 0; i < results.size(); ++i) {
 	    	ids.add((String) results.get(i).getFieldValue("id"));
-	    	System.out.println(ids.get(ids.size()-1));
+	    	//System.out.println(ids.get(ids.size()-1));
 	    }
-	    return null;
+	    return ids;
 	}
 	
 	public static ArrayList<String> getByAuthorSearch(String s) throws SolrServerException{
@@ -80,7 +93,7 @@ public class SolrInterface {
 	    for (int i = 0; i < results.size(); ++i) {
 	    	ids.add((String) results.get(i).getFieldValue("id"));
 	    }
-	    return null;
+	    return ids;
 	}
 	
 	/*public static ArrayList<String> getByMentionsSearch(String s) throws SolrServerException{
@@ -99,8 +112,8 @@ public class SolrInterface {
 	}*/
 	
 	public static void main(String[] args) throws SolrServerException, ClassNotFoundException, IOException{
-		//System.out.println(getProcessedDocument("eng-NG-31-100177-10778010"));
-		Object temp = getProcessedDocument("eng-NG-31-100124-10777395");
-		getByTexualSearch("CIA");
+		System.out.println(getRawDocument("APW_ENG_20090531.0544"));
+		//Object temp = getProcessedDocument("APW_ENG_20090531.0544");
+		//getByTexualSearch("CIA");
 	}
 }
