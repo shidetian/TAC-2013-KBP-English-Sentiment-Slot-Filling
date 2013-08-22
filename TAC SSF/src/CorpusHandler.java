@@ -68,7 +68,7 @@ public class CorpusHandler{
 				if (category.equals("web")){
 					//TODO: call clean
 				}
-				String[] preprocess = Preprocessor.Tokenize(StripXMLTags.strip(wholeDoc).toString());
+				Object[] preprocess = Preprocessor.Tokenize(StripXMLTags.strip(wholeDoc).toString());
 				currentDoc.addField("offsets", preprocess[0]);
 				currentDoc.addField("tokens", preprocess[1]);
 				currentDoc.addField("tree", preprocess[2]);

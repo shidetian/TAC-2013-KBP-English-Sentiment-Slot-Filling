@@ -11,6 +11,6 @@ public class ProcessedDocument {
 	public ProcessedDocument(String o, String t, ArrayList<Tree> arrayList){
 		offsets = o;
 		tokens = t;
-		arrayList = trees;
+		trees = arrayList;
 	}
 }

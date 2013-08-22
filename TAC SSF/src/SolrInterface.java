@@ -29,6 +29,7 @@ public class SolrInterface {
 	    return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static ProcessedDocument getProcessedDocument(String id) throws SolrServerException, ClassNotFoundException, IOException{
 		SolrQuery query = new SolrQuery();
 		if (id.contains(".")){
@@ -40,10 +41,10 @@ public class SolrInterface {
 		
 		QueryResponse response = server.query(query);
 		SolrDocumentList results = response.getResults();
-	    for (int i = 0; i < results.size(); ++i) {
+	    for (int i = 0; i < results.size(); i++) {
 	    	return new ProcessedDocument((String) results.get(i).getFieldValue("offsets"),
 	    						(String) results.get(i).getFieldValue("tokens"),
-	    						(ArrayList<Tree>) Preprocessor.fromBase64((String) results.get(i).getFieldValue("tree"))
+	    						(ArrayList<Tree>) Preprocessor.fromBase64(((byte[]) results.get(i).getFieldValue("tree")))
 	    	);
 	    }
 	    return null;
@@ -97,8 +98,9 @@ public class SolrInterface {
 	    return null;
 	}*/
 	
-	public static void main(String[] args) throws SolrServerException{
-		System.out.println(getRawDocument("eng-NG-31-127457-9231397.14"));
-		//getByTexualSearch("CIA");
+	public static void main(String[] args) throws SolrServerException, ClassNotFoundException, IOException{
+		//System.out.println(getProcessedDocument("eng-NG-31-100177-10778010"));
+		Object temp = getProcessedDocument("eng-NG-31-100124-10777395");
+		getByTexualSearch("CIA");
 	}
 }

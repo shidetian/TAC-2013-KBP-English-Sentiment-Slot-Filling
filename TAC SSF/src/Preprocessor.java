@@ -7,7 +7,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.solr.common.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 import edu.stanford.nlp.ling.CoreAnnotations.CharacterOffsetBeginAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.CharacterOffsetEndAnnotation;
@@ -25,21 +25,21 @@ public class Preprocessor {
 	static LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
 	static TokenizerFactory<CoreLabel> ptbtf = PTBTokenizer.factory(new CoreLabelTokenFactory(), "invertible");
 	
-	public static String toBase64(Object o) throws IOException{
+	public static byte[] toBase64(Object o) throws IOException{
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		ObjectOutputStream os = new ObjectOutputStream(bao);
 		os.writeObject(o);
 		byte[] temp = bao.toByteArray();
-		return Base64.byteArrayToBase64(temp, 0, temp.length);
+		return Base64.encodeBase64(temp);
 	}
 	
-	public static Object fromBase64(String s) throws IOException, ClassNotFoundException{
-		byte[] temp = Base64.base64ToByteArray(s);
+	public static Object fromBase64(byte[] bin) throws IOException, ClassNotFoundException{
+		byte[] temp = Base64.decodeBase64(bin);
 		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(temp));
 		return ois.readObject();
 	}
 	
-	public static String[] Tokenize(String doc) throws IOException{
+	public static Object[] Tokenize(String doc) throws IOException{
 		//try{
 		//for (String arg : s) {
 		//PTBTokenizer<CoreLabel> ptbt = new PTBTokenizer<CoreLabel>(new FileReader(f), new CoreLabelTokenFactory(), "invertible");
@@ -102,13 +102,13 @@ public class Preprocessor {
 	      }*/
 		//} catch (IOException e) {
 		//}
-		return new String[]{offsets.toString(),tokens.toString(),toBase64(treeObjs)};
+		return new Object[]{offsets.toString(),tokens.toString(),toBase64(treeObjs)};
 	}
 	
 	public static void main(String[] args) throws IOException{
-		String[] temp = Tokenize("aaa d wE the people. had a drink. It was fun.");
-		for(String s: temp){
+		Object[] temp = Tokenize("aaa d wE the people. had a drink. It was fun.");
+		/*for(String s: temp){
 			System.out.println(s);
-		}
+		}*/
 	}
 }
