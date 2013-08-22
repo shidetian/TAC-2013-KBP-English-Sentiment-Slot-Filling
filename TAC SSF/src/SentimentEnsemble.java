@@ -27,7 +27,7 @@ public class SentimentEnsemble{
 		String line;
             	while ((line=br.readLine())!= null){
             		String[] a = line.split("\t");
-            		this.sentimentList.add(new SentimentUnit(a[0],a[1],a[2],a[3],a[4],a[5],(double) a[6]));
+            		this.sentimentList.add(new SentimentUnit(a[0],a[1],a[2],a[3],a[4],a[5],Double.parseDouble(a[6])));
             	}
             	br.close();
 	}
