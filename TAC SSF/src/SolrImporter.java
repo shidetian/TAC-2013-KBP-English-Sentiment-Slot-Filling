@@ -85,7 +85,7 @@ public class SolrImporter {
 					int i = 0;
 					//break;
 				}*/
-					handler.startElement(pullParser, StripXMLTags.strip(current).toString());
+					handler.startElement(pullParser, current);
 					break;
 				case XmlPullParser.END_TAG: handler.endElement(pullParser.getName()); break;
 				case XmlPullParser.TEXT: handler.characters(pullParser.getText()); break;

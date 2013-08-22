@@ -3,6 +3,9 @@
 // For any two sentiment units sharing the same holder and target, 
 // the output will be only one
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public class SentimentEnsemble{
@@ -21,7 +24,8 @@ public class SentimentEnsemble{
 	// add a list of sentiment unit
 	public void addSentimentFile(String filename){
 		BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
-            	while ((String line=br.readLines())!= null){
+		String line;
+            	while ((line=br.readLine())!= null){
             		String[] a = line.split("\t");
             		this.sentimentList.add(new SentimentUnit(a[0],a[1],a[2],a[3],a[4],a[5],(double) a[6]));
             	}
