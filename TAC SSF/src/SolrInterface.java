@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.solr.client.solrj.SolrQuery;
@@ -5,6 +6,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
+
 import edu.stanford.nlp.trees.Tree;
 
 public class SolrInterface {
@@ -27,7 +29,7 @@ public class SolrInterface {
 	    return null;
 	}
 	
-	public static ProcessedDocument getProcessedDocument(String id) throws SolrServerException{
+	public static ProcessedDocument getProcessedDocument(String id) throws SolrServerException, ClassNotFoundException, IOException{
 		SolrQuery query = new SolrQuery();
 		if (id.contains(".")){
 			id = id.substring(0, id.indexOf('.'));
@@ -41,7 +43,7 @@ public class SolrInterface {
 	    for (int i = 0; i < results.size(); ++i) {
 	    	return new ProcessedDocument((String) results.get(i).getFieldValue("offsets"),
 	    						(String) results.get(i).getFieldValue("tokens"),
-	    						(ArrayList<Tree>) results.get(i).getFieldValue("tree")
+	    						(ArrayList<Tree>) Preprocessor.fromBase64((String) results.get(i).getFieldValue("tree"))
 	    	);
 	    }
 	    return null;
