@@ -10,9 +10,9 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class lookUpOpinLeixcon {
+public class OpinLeixconChecker {
 	
-	public lookUpOpinLeixcon(String option) throws IOException{
+	public OpinLeixconChecker(String option) throws IOException{
 		lexicon = new ArrayList<OpinWord>();
 		lexiconHash = new Hashtable<String, Integer>();
 		
