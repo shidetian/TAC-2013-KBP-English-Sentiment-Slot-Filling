@@ -13,7 +13,8 @@ public class CompleteSystem {
 	public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException {
 		ArrayList<Query> qs = QueryReader.parseFile(args[0]);
 		for(Query q : qs){
-			
+			QueryBundle b = new QueryBundle(q);
+			//Call systems with QueryBundle
 		}
 	}
 

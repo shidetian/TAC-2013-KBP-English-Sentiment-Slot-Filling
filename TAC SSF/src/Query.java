@@ -30,6 +30,7 @@ public class Query {
 			altNames = new ArrayList<String>();
 			if (nodeId.charAt(0)=='E'){
 				//TODO lookup in KB
+				//altNames.addAll(KBImporter.kb.get(nodeId).getAltNames());
 			}
 			
 			if (corefs){
