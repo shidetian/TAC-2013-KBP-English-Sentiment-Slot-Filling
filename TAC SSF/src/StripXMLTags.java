@@ -13,7 +13,7 @@ public class StripXMLTags {
 	
 	
 	public static StringBuffer fix(String s){
-		Pattern p = Pattern.compile("<QUOTE[^>]+>");
+		Pattern p = Pattern.compile("<QUOTE[^>]+>|& ");
 		Matcher m = p.matcher(s);
 		StringBuffer fixed= new StringBuffer();
 		while (m.find()) {

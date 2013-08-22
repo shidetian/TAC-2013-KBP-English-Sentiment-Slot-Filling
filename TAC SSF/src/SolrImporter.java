@@ -96,6 +96,7 @@ public class SolrImporter {
 					/*if (e.getMessage().contains("</DOC>")){
 						handler.endElement("doc");
 					}*/
+					System.out.println(StripXMLTags.fix(current).toString());
 					throw e; //fixed, shouldn't throw error anymore
 				}catch(EOFException e){
 					System.out.println("Warning: some quote related XML problems were fixed/ignored. This shouldn't happen\n");
