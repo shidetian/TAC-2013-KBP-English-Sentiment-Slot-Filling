@@ -139,7 +139,10 @@
    <!--<field name="resourcename" type="text_general" indexed="true" stored="true"/>
    <field name="url" type="text_general" indexed="true" stored="true"/>-->
    <field name="mentions" type="text_general" indexed="true" stored="true" multiValued="true"/>
-   <field name="whole_text" type="string" indexed="false" stored="true"/>
+   <field name="whole_text" type="string" indexed="false" stored="true" multiValued="false"/>
+   <field name="tree" type="binary" indexed="false" stored="true"/>
+   <field name="offsets" type="string" indexed="false" stored="true"/>
+   <field name="tokens" type="string" indexed="false" stored="true"/>
    <!--<field name="last_modified" type="date" indexed="true" stored="true"/>
    <field name="links" type="string" indexed="true" stored="true" multiValued="true"/>
    -->

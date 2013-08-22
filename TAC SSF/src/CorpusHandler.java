@@ -69,7 +69,10 @@ public class CorpusHandler{
 				}
 				currentDoc.addField("category", category);
 				currentDoc.addField("whole_text", wholeDoc);
-				
+				String[] preprocess = Preprocessor.Tokenize(StripXMLTags.strip(wholeDoc).toString());
+				currentDoc.addField("offsets", preprocess[0]);
+				currentDoc.addField("tokens", preprocess[1]);
+				currentDoc.addField("tree", preprocess[2]);
 			}
 		}else if (qName.equalsIgnoreCase("DOCID")){
 			//Should happen in web documents only
