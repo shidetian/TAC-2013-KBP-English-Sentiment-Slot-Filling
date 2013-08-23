@@ -25,6 +25,7 @@ public class OpinLeixconChecker {
 		else{
 			gfbfRead();
 			DSESERead();
+			GIRead();
 		}
 	}
 	
@@ -122,9 +123,31 @@ public class OpinLeixconChecker {
 		return;
 	}
 	
-	private void GIRead(){
-		return;
-	}
+	private void GIRead() throws IOException{
+                File GILeixconF = new File(GILexiconFileName);
+                FileReader GILeixconFR = new FileReader(GILeixconF);
+                BufferedReader GILeixconBR = new BufferedReader(GILeixconFR);
+                String line = "";
+                while ( (line=GILeixconBR.readLine())!= null ){
+                        String[] tmp = line.split("\t");
+                        if ( (tmp[2].equals("Positv") && tmp[3].equals("Negativ")) || (!tmp[2].equals("Positiv") && !tmp[3].equals("Negativ")) )
+                                continue;
+
+                        OpinWord op = new OpinWord();
+                        Pattern signPattern = Pattern.compile("#[0-9]+");
+                        Matcher signMatcher = signPattern.matcher(tmp[0]);
+                        if (signMatcher.find())
+                                tmp[0]=tmp[0].replace(signMatcher.group(), "");
+                        op.word = tmp[0].toLowerCase();
+                        op.lexicon = "GI";
+                        if (tmp[2].equals("Positiv"))
+                                op.polarity = "positive";
+                        else if (tmp[3].equals("Negativ"))
+                                op.polarity = "negative";
+                }
+
+                return;
+        }
 	
 	
 	
