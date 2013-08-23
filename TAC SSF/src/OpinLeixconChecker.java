@@ -32,6 +32,7 @@ public class OpinLeixconChecker {
 	private String gfLeixconFileName = "goodFor_manual.csv";
 	private String bfLeixconFileName = "badFor_manual.csv";
 	private String DSESELexiconFileName = "subjclueslen1-CL06sub.tff";
+	private String GILexiconFileName = "GeneralInquiry.csv";
 	//private String subjLexiconFileName = "";
 	private ArrayList<OpinWord> lexicon;
 	private Hashtable<String, Integer> lexiconHash;
