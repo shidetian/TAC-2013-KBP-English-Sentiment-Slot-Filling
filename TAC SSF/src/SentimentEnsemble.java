@@ -33,11 +33,14 @@ public class SentimentEnsemble{
 	}
 	
 	public void ensemble(){
-		/*
-		Functions will be done to the sentimentList
-		and will add the voting (ensemble) results 
-		to the sentimentListEnsembled
-		*/
+		for(int i=0;i<sentimentList.size();i++){
+			for (int j=0;j<sentimentList.size();j++){
+				if (sameEntity(sentimentList[i].holderSpan, sentimentList[j].targetSpan) &&
+				sameEntity(sentimentList[i].holderSpan, sentimentList[j].targetSpan) ){
+					
+				}
+			}
+		}
 		return;
 	}
 }
