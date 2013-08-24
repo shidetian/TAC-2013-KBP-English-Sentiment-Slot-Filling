@@ -1,5 +1,3 @@
-package opinUnit;
-
 // ensemble (voting) different sentiment untis from different sentiment analysis system
 
 // For any two sentiment units sharing the same holder and target, 
