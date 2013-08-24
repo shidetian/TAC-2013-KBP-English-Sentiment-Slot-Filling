@@ -2,20 +2,23 @@ package opinWords;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class OpinLeixconChecker {
+public class OpinLexiconChecker {
 	
-	public OpinLeixconChecker(String option) throws IOException{
+	public OpinLexiconChecker() throws IOException{
 		lexicon = new ArrayList<OpinWord>();
 		lexiconHash = new Hashtable<String, Integer>();
-		
+		opList = new ArrayList<OpinWord>();
+		polterms = new HashSet<String>();
+		/*
 		if (option.contains("gfbf"))
 			gfbfRead();
 		else if (option.contains("DSESE"))
@@ -23,29 +26,57 @@ public class OpinLeixconChecker {
 		else if (option.contains("GI"))
 			GIRead();
 		else{
+		*/
 			gfbfRead();
 			DSESERead();
 			GIRead();
-		}
+		//}
 	}
 	
-	private String gfLeixconFileName = "goodFor_manual.csv";
-	private String bfLeixconFileName = "badFor_manual.csv";
+	private String gfLexiconFileName = "goodFor_manual.csv";
+	private String bfLexiconFileName = "badFor_manual.csv";
 	private String DSESELexiconFileName = "subjclueslen1-CL06sub.tff";
 	private String GILexiconFileName = "GeneralInquiry.csv";
-	//private String subjLexiconFileName = "";
 	private ArrayList<OpinWord> lexicon;
 	private Hashtable<String, Integer> lexiconHash;
 	
-	public ArrayList<OpinWord> lookUp(String line) throws IOException{
-		ArrayList<OpinWord> opList = new ArrayList<OpinWord>();
+	public String sentence;
+	public ArrayList<OpinWord> opList;
+	public HashSet<String> polterms;
+	
+	public HashMap<String, String> runOpinionWordChecker(String line) throws IOException{
+		HashMap<String, String> results = new HashMap<String, String>();
+		sentence = line;
+		ArrayList<OpinWord> opList = lookUp(sentence);
+		int positiveNum = 0;
+		int negativeNum = 0;
+		for (OpinWord ow:opList){
+			if (ow.polarity.contains("pos"))
+				positiveNum++;
+			else if (ow.polarity.contains("neg"))
+				negativeNum++;
+			
+		}
+		if (positiveNum > negativeNum)
+			results.put("0_"+String.valueOf(line.length()-1), "positive");
+		else if (positiveNum < negativeNum)
+			results.put("0_"+String.valueOf(line.length()-1), "negative");
+		
+		return results;
+	}
+	
+	private ArrayList<OpinWord> lookUp(String line) throws IOException{
+		opList = new ArrayList<OpinWord>();
 		
 		String[] wordsList = line.split(" ");
 		for (int i=0;i<wordsList.length;i++){
 			String word = wordsList[i];
 			
-			if (lexiconHash.containsKey(word))
+			if (lexiconHash.containsKey(word)){
 				opList.add(lexicon.get(lexiconHash.get(word)));
+				polterms.add(word);
+			}
+			
 			
 		}
 		
@@ -53,11 +84,11 @@ public class OpinLeixconChecker {
 	}
 	
 	private void gfbfRead() throws IOException{
-		File gfLeixconF = new File(gfLeixconFileName);
-		FileReader gfLeixconFR = new FileReader(gfLeixconF);
-		BufferedReader gfLeixconBR = new BufferedReader(gfLeixconFR);
+		File gfLexiconF = new File(gfLexiconFileName);
+		FileReader gfLexiconFR = new FileReader(gfLexiconF);
+		BufferedReader gfLexiconBR = new BufferedReader(gfLexiconFR);
 		String line = "";
-		while ( (line=gfLeixconBR.readLine())!= null ){
+		while ( (line=gfLexiconBR.readLine())!= null ){
 			Pattern gfPattern = Pattern.compile("^(.*?)\t(.*?)\t(.*?)$");
 			Matcher gfMatcher = gfPattern.matcher(line);
 			if (gfMatcher.find()){
@@ -74,11 +105,11 @@ public class OpinLeixconChecker {
 			}
 		}
 		
-		File bfLeixconF = new File(bfLeixconFileName);
-		FileReader bfLeixconFR = new FileReader(bfLeixconF);
-		BufferedReader bfLeixconBR = new BufferedReader(bfLeixconFR);
+		File bfLexiconF = new File(bfLexiconFileName);
+		FileReader bfLexiconFR = new FileReader(bfLexiconF);
+		BufferedReader bfLexiconBR = new BufferedReader(bfLexiconFR);
 		line = "";
-		while ( (line=bfLeixconBR.readLine())!= null ){
+		while ( (line=bfLexiconBR.readLine())!= null ){
 			Pattern bfPattern = Pattern.compile("^(.*?)\t(.*?)\t(.*?)$");
 			Matcher bfMatcher = bfPattern.matcher(line);
 			if (bfMatcher.find()){
@@ -100,11 +131,11 @@ public class OpinLeixconChecker {
 	}
 	
 	private void DSESERead() throws IOException{
-		File DSESELeixconF = new File(DSESELexiconFileName);
-		FileReader DSESELeixconFR = new FileReader(DSESELeixconF);
-		BufferedReader DSESELeixconBR = new BufferedReader(DSESELeixconFR);
+		File DSESELexiconF = new File(DSESELexiconFileName);
+		FileReader DSESELexiconFR = new FileReader(DSESELexiconF);
+		BufferedReader DSESELexiconBR = new BufferedReader(DSESELexiconFR);
 		String line = "";
-		while ( (line=DSESELeixconBR.readLine())!= null ){
+		while ( (line=DSESELexiconBR.readLine())!= null ){
 			Pattern DSESEPattern = Pattern.compile("word1=(.*?) pos1=(.*?) stemmed1=(.*?) priorpolarity=(.*?) ");
 			Matcher DSESEMatcher = DSESEPattern.matcher(line);
 			if (DSESEMatcher.find()){
@@ -125,30 +156,30 @@ public class OpinLeixconChecker {
 	}
 	
 	private void GIRead() throws IOException{
-                File GILeixconF = new File(GILexiconFileName);
-                FileReader GILeixconFR = new FileReader(GILeixconF);
-                BufferedReader GILeixconBR = new BufferedReader(GILeixconFR);
-                String line = "";
-                while ( (line=GILeixconBR.readLine())!= null ){
-                        String[] tmp = line.split("\t");
-                        if ( (tmp[2].equals("Positv") && tmp[3].equals("Negativ")) || (!tmp[2].equals("Positiv") && !tmp[3].equals("Negativ")) )
-                                continue;
-
-                        OpinWord op = new OpinWord();
-                        Pattern signPattern = Pattern.compile("#[0-9]+");
-                        Matcher signMatcher = signPattern.matcher(tmp[0]);
-                        if (signMatcher.find())
-                                tmp[0]=tmp[0].replace(signMatcher.group(), "");
-                        op.word = tmp[0].toLowerCase();
-                        op.lexicon = "GI";
-                        if (tmp[2].equals("Positiv"))
-                                op.polarity = "positive";
-                        else if (tmp[3].equals("Negativ"))
-                                op.polarity = "negative";
-                }
-
-                return;
-        }
+		File GILexiconF = new File(GILexiconFileName);
+		FileReader GILexiconFR = new FileReader(GILexiconF);
+		BufferedReader GILexiconBR = new BufferedReader(GILexiconFR);
+		String line = "";
+		while ( (line=GILexiconBR.readLine())!= null ){
+			String[] tmp = line.split("\t");
+			if ( (tmp[2].equals("Positv") && tmp[3].equals("Negativ")) || (!tmp[2].equals("Positiv") && !tmp[3].equals("Negativ")) )
+				continue;
+			
+			OpinWord op = new OpinWord();
+			Pattern signPattern = Pattern.compile("#[0-9]+");
+			Matcher signMatcher = signPattern.matcher(tmp[0]);
+			if (signMatcher.find())
+				tmp[0]=tmp[0].replace(signMatcher.group(), "");
+			op.word = tmp[0].toLowerCase();
+			op.lexicon = "GI";
+			if (tmp[2].equals("Positiv"))
+				op.polarity = "positive";
+			else if (tmp[3].equals("Negativ"))
+				op.polarity = "negative";
+		}
+		
+		return;
+	}
 	
 	
 	
