@@ -13,15 +13,18 @@ import opin.main.opinionFinder;
 public class PittSystem {
 	
 	static OpinionFinder of;
+	static OpinionLexiconChecker ow;
 	static SentenceSplitter ss;
 	static HTDetection ht;
+	static HTbb htLingjia;
 	
 	// Initialize Pitt System
 	public PittSystem(){
 		ss = new SentenceSplitter("edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger");
-		of = new OpinionFinder();	
+		of = new OpinionFinder();
+		ow = new OpinionLexiconChecker();
 		ht = new HTDetection();
-		// initialize OpinionWords Class
+		htLingjia = new HTbb();
 	}
 	
 	public void run(QueryBundle qb){
@@ -71,6 +74,9 @@ public class PittSystem {
 						continue;
 						
 					HashMap<String, String> pol = opinionFinder.runOpinionFinder(sent.sent);
+					pol.putAll(ow.runOpinionWordChecker(sent.sent))；
+					
+					
 					HashMap<String, String> polarity = new HashMap<String, String>();
 					String sSpan = Integer.toString(sent.beg).concat("-").concat(Integer.toString(sent.end));
 					
