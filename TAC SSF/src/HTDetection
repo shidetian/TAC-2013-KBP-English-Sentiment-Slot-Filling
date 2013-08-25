@@ -52,10 +52,16 @@ public class HTDetection {
 					obj = obj.substring(0, obj.indexOf("-"));
 					
 					if(Sopin.compareTo(Oopin) == 0){
-						String oSpan = Integer.toString(sent.sent.indexOf(Oopin)+sent.beg).concat("-").concat(Integer.toString(sent.sent.indexOf(Oopin)+sent.beg+Oopin.length()));
-						String hSpan = Integer.toString(sent.sent.indexOf(subj)+sent.beg).concat("-").concat(Integer.toString(sent.sent.indexOf(subj)+sent.beg+subj.length()));;
-						String tSpan = Integer.toString(sent.sent.indexOf(obj)+sent.beg).concat("-").concat(Integer.toString(sent.sent.indexOf(obj)+sent.beg+obj.length()));;
-						ht.put(Oopin, oSpan.concat("\t").concat(hSpan).concat("\t").concat(tSpan));
+						String opin = Oopin.concat("\t").
+								concat(Integer.toString(sent.sent.indexOf(Oopin)+sent.beg).concat("-").
+								concat(Integer.toString(sent.sent.indexOf(Oopin)+sent.beg+Oopin.length())));
+						String holder = subj.concat("\t").
+								concat(Integer.toString(sent.sent.indexOf(subj)+sent.beg).concat("-").
+								concat(Integer.toString(sent.sent.indexOf(subj)+sent.beg+subj.length())));;
+						String target = obj.concat("\t").
+								concat(Integer.toString(sent.sent.indexOf(obj)+sent.beg).concat("-").
+								concat(Integer.toString(sent.sent.indexOf(obj)+sent.beg+obj.length())));;
+						ht.put(Oopin, opin.concat("\t").concat(holder).concat("\t").concat(target));
 						//String p = polarity.get(Oopin); 
 						//senti.add(new SentimentUnit(sSpan, oSpan, hSpan, tSpan, p, 0));
 						check = true;
@@ -65,10 +71,14 @@ public class HTDetection {
 			}
 			
 			if(!check){
-				String oSpan = Integer.toString(sent.sent.indexOf(Sopin)+sent.beg).concat("-").concat(Integer.toString(sent.sent.indexOf(Sopin)+sent.beg+Sopin.length()));
-				String hSpan = "";
-				String tSpan = Integer.toString(sent.sent.indexOf(subj)+sent.beg).concat("-").concat(Integer.toString(sent.sent.indexOf(subj)+sent.beg+subj.length()));;
-				ht.put(Sopin, oSpan.concat("\t").concat(hSpan).concat("\t").concat(tSpan));
+				String opin = Sopin.concat("\t").
+						concat(Integer.toString(sent.sent.indexOf(Sopin)+sent.beg).concat("-").
+						concat(Integer.toString(sent.sent.indexOf(Sopin)+sent.beg+Sopin.length())));
+				String holder = "\t";
+				String target = subj.concat("\t").
+						concat(Integer.toString(sent.sent.indexOf(subj)+sent.beg).concat("-").
+						concat(Integer.toString(sent.sent.indexOf(subj)+sent.beg+subj.length())));;
+				ht.put(Sopin, opin.concat("\t").concat(holder).concat("\t").concat(target));
 				//System.out.println("Sopin : " + Sopin);
 				//String p = polarity.get(Sopin); 
 				//senti.add(new SentimentUnit(sSpan, oSpan, hSpan, tSpan, p, 0));
