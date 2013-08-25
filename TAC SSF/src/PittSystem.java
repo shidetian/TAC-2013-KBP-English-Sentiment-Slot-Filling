@@ -100,7 +100,7 @@ public class PittSystem {
 						String opin = iter.next();
 						//System.out.println("Extracted: " + opin);
 						String p = polarity.get(opin);
-						bw.write(docid + "\t" + sSpan + "\t" + oht.get(opin) + "\t" + p + "\t" + "1.0\n");
+						bw.write(docid + "\t" + sent.sent + "\t" + sSpan + "\t" + oht.get(opin) + "\t" + p + "\t" + "1.0\n");
 					}
 				}
 			}
