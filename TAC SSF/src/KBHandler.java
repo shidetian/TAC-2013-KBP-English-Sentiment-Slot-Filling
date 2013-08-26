@@ -12,7 +12,7 @@ public class KBHandler extends DefaultHandler {
             Attributes attributes) throws SAXException {
 		if (qName.equalsIgnoreCase("entity")){
 			String type = attributes.getValue("type");
-			if (type.equalsIgnoreCase("ORG") || type.equalsIgnoreCase("PER") || type.equalsIgnoreCase("GPE")){
+			if (type.equalsIgnoreCase("ORG") || type.equalsIgnoreCase("PER") || type.equalsIgnoreCase("GPE") || type.equalsIgnoreCase("UKN")){
 				skip = false;
 				//System.out.println("Type:"+type+"	Name:"+attributes.getValue("name"));
 				current = new Entity();
