@@ -94,6 +94,7 @@ public class PittSystem {
 					// call OpinionWords function
 					
 					HashMap<String, String> oht = ht.process(sent, polterms);
+					oht.putAll(htLingjia.process(sent.sent,ow.polterms,ow.polterms,sent.beg,sent.end));
 					keyset = oht.keySet();
 					iter = keyset.iterator();
 					while(iter.hasNext()){
