@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,7 +12,7 @@ public class HTbb {
 	public String sentence;
 	public String holderSpan;
 	public String targetSpan;
-	public ArrayList<String> entities;
+	public String[] entities;
 	public String printing;
 	public HashMap<String, String> results;
 	public int sentencenBegin;
@@ -39,11 +40,11 @@ public class HTbb {
 		
 	}
 	
-	public HashMap<String, String> process(String s, ArrayList<String> opinWords, ArrayList<String> entities, int sentenceBegin, int sentenceEnd){
+	public HashMap<String, String> process(String s, ArrayList<String> opinWords, HashSet<String> entities, int sentenceBegin, int sentenceEnd){
 		HashMap<String, String> results = new HashMap<String, String>();
 		this.opinWords = opinWords;
 		this.sentence = s;
-		this.entities = entities;
+		this.entities = (String[]) entities.toArray();
 		this.sentencenBegin = sentenceBegin;
 		this.sentenceEnd = sentenceEnd;
 		
@@ -64,33 +65,33 @@ public class HTbb {
 	
 	private void extractHT(){
 		for (int indexOpinWord=0;indexOpinWord<opinWords.size();indexOpinWord++){
-			for (int indexEntity=0;indexEntity<entities.size();indexEntity++){
-				String trace = p.getTheRelationBetween(opinWords.get(indexOpinWord), entities.get(indexEntity));
+			for (int indexEntity=0;indexEntity<entities.length;indexEntity++){
+				String trace = p.getTheRelationBetween(opinWords.get(indexOpinWord), entities[indexEntity]);
 				Boolean holderFlag = traceJudgeHolder(trace);
 				Boolean targetFlag = traceJudgeTarget(trace);
 				
 				if (holderFlag && !targetFlag){
-					if (holderCandidatesLength.contains(entities.get(indexEntity))){
-						int value = holderCandidatesLength.get(entities.get(indexEntity)) + trace.split("-").length-1;
-						holderCandidatesLength.put(entities.get(indexEntity),value);
-						int times = holderCandidatesTimes.get(entities.get(indexEntity)) + 1;
-						holderCandidatesTimes.put(entities.get(indexEntity), times);
+					if (holderCandidatesLength.contains(entities[indexEntity])){
+						int value = holderCandidatesLength.get(entities[indexEntity]) + trace.split("-").length-1;
+						holderCandidatesLength.put(entities[indexEntity],value);
+						int times = holderCandidatesTimes.get(entities[indexEntity]) + 1;
+						holderCandidatesTimes.put(entities[indexEntity], times);
 					}
 					else{
-						holderCandidatesLength.put(entities.get(indexEntity),trace.split("-").length-1);
-						holderCandidatesTimes.put(entities.get(indexEntity), 1);
+						holderCandidatesLength.put(entities[indexEntity],trace.split("-").length-1);
+						holderCandidatesTimes.put(entities[indexEntity], 1);
 					}
 				}
 				else if (!holderFlag && targetFlag){
-					if (targetCandidatesLength.contains(entities.get(indexEntity))){
-						int value = targetCandidatesLength.get(entities.get(indexEntity)) + trace.split("-").length-1;
-						targetCandidatesLength.put(entities.get(indexEntity),value);
-						int times = targetCandidatesTimes.get(entities.get(indexEntity)) + 1;
-						targetCandidatesTimes.put(entities.get(indexEntity), times);
+					if (targetCandidatesLength.contains(entities[indexEntity])){
+						int value = targetCandidatesLength.get(entities[indexEntity]) + trace.split("-").length-1;
+						targetCandidatesLength.put(entities[indexEntity],value);
+						int times = targetCandidatesTimes.get(entities[indexEntity]) + 1;
+						targetCandidatesTimes.put(entities[indexEntity], times);
 					}
 					else{
-						targetCandidatesLength.put(entities.get(indexEntity),trace.split("-").length-1);
-						targetCandidatesTimes.put(entities.get(indexEntity), 1);
+						targetCandidatesLength.put(entities[indexEntity],trace.split("-").length-1);
+						targetCandidatesTimes.put(entities[indexEntity], 1);
 					}
 				}
 			}
