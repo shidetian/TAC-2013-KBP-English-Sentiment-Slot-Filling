@@ -10,7 +10,7 @@ public class SentimentUnit{
 	public String opinSpan;  // span of the opinion expression
 	public String opinOffsets;
 	public String holderSpan;  // span of the holder
-	public String holderOffsets
+	public String holderOffsets;
 	public String targetSpan;  // span of the target
 	public String targetOffsets;
 	public String polarity;    // polarity, pos or neg
@@ -19,7 +19,7 @@ public class SentimentUnit{
 	public SentimentUnit(String docID, String sentenceSpan, String sentenceOffsets, 
 	                String opinSpan, String opinOffsets,
 	                String holderSpan, String holderOffsets,
-			String targetSpan, String, targetOffsets,
+			String targetSpan, String targetOffsets,
 			String polarity, double confidenceScore){
 		this.docID = docID;
 		this.sentenceSpan = sentenceSpan;
