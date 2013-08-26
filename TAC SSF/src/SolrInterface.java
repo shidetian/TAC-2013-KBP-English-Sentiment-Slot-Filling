@@ -59,7 +59,12 @@ public class SolrInterface {
 	    						(ArrayList<Tree>) Preprocessor.fromBase64(((byte[]) results.get(0).getFieldValue("tree")))
 	    	);
 	    }else{
-	    	return null;
+	    	String rawText = SolrInterface.getRawDocument(getOriginalId(id));
+			Object[] processed = Preprocessor.Tokenize(rawText);
+			String offsets = (String) processed[0];
+			String tokens = (String) processed[1];
+			ArrayList<Tree> trees = (ArrayList<Tree>) Preprocessor.fromBase64((byte[]) processed[2]);
+	    	return new ProcessedDocument(offsets,tokens, trees);
 	    }
 	}
 	
