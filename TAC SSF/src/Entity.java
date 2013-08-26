@@ -1,8 +1,13 @@
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 
-public class Entity {
+public class Entity implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3676124656636334156L;
 	private Set<String> name; //The first element is preferably the KB header version of the name
 	private String id = ""; //NIL if not in kb
 	private String type = "";
