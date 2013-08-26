@@ -35,10 +35,17 @@ public class SentimentEnsemble{
 	}
 	
 	public void ensemble(){
+		Set<Integer> checked = new Set<Integer>();
+		
 		for(int i=0;i<sentimentList.size();i++){
+			if (checked.contains(i))
+				continue;
+			
 			for (int j=i+1;j<sentimentList.size();j++){
 				if (sameEntity(sentimentList.get(i).holderSpan, sentimentList.get(j).targetSpan) &&
 				sameEntity(sentimentList.get(i).holderSpan, sentimentList.get(j).targetSpan) ){
+					checked.add(j);
+					
 					if (sentimentList.get(i).confidenceScore > sentimentList.get(j).confidenceScore)
 						sentimentListEnsembled.add(sentimentList.get(i));
 					else if (sentimentList.get(i).confidenceScore < sentimentList.get(j).confidenceScore)
@@ -53,6 +60,7 @@ public class SentimentEnsemble{
 					} //else
 				} // sameEntity Judge
 			} // inner loop
+			checked.add(i);
 		} //out loop
 		return;
 	}
