@@ -17,6 +17,7 @@ public class PittSystem {
 	static SentenceSplitter ss;
 	static HTDetection ht;
 	static HTbb htLingjia;
+	static NEReader NE;
 	
 	// Initialize Pitt System
 	public PittSystem(){
@@ -25,6 +26,7 @@ public class PittSystem {
 		ow = new OpinionLexiconChecker();
 		ht = new HTDetection();
 		htLingjia = new HTbb();
+		NE = new NEReader("");
 	}
 	
 	public void run(QueryBundle qb){
@@ -73,7 +75,10 @@ public class PittSystem {
 					if(temp.length() <= 1)
 						continue;
 						
+					Set<String> NEs = NE.parseFile(docid, sent.beg, sent.end);
+					
 					HashMap<String, String> pol = opinionFinder.runOpinionFinder(sent.sent);
+					// Opin Word Checker
 					pol.putAll(ow.runOpinionWordChecker(sent.sent))；
 					
 					
@@ -91,10 +96,10 @@ public class PittSystem {
 						polarity.put(sent.sent.substring(Integer.parseInt(toks[0]), Integer.parseInt(toks[1])), pol.get(offset));
 					}
 					
-					// call OpinionWords function
-					
 					HashMap<String, String> oht = ht.process(sent, polterms);
-					oht.putAll(htLingjia.process(sent.sent,ow.polterms,ow.polterms,sent.beg,sent.end));
+					// Opin Word Checker
+					oht.putAll(htLingjia.process(sent.sent, ow.polterms, NEs, sent.beg, sent.end));
+					
 					keyset = oht.keySet();
 					iter = keyset.iterator();
 					while(iter.hasNext()){
@@ -110,6 +115,12 @@ public class PittSystem {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SolrServerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
