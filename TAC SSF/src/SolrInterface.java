@@ -14,7 +14,7 @@ public class SolrInterface {
 	
 	public static String getOriginalId(String id){
 		if (id.contains(".")){
-			if (id.charAt(id.indexOf('.'))=='0'){
+			if (id.charAt(id.indexOf('.')+1)=='0'){
 				return id;
 			}else return id.substring(0, id.indexOf('.'));
 		}else{
@@ -44,22 +44,22 @@ public class SolrInterface {
 	@SuppressWarnings("unchecked")
 	public static ProcessedDocument getProcessedDocument(String id) throws SolrServerException, ClassNotFoundException, IOException{
 		SolrQuery query = new SolrQuery();
-		if (id.contains(".")){
-			id = id.substring(0, id.indexOf('.'));
-		}
 		query.setQuery("id:"+getOriginalId(id));
 		query.setStart(0);
 		query.setFields("offsets", "tokens", "tree");
 		
 		QueryResponse response = server.query(query);
 		SolrDocumentList results = response.getResults();
-	    if (results.size()>0) {
+	    if (results.size()>0 && results.get(0).getFieldValue("offsets")!=null) {
 	    	return new ProcessedDocument((String) results.get(0).getFieldValue("offsets"),
 	    						(String) results.get(0).getFieldValue("tokens"),
 	    						(ArrayList<Tree>) Preprocessor.fromBase64(((byte[]) results.get(0).getFieldValue("tree")))
 	    	);
 	    }else{
 	    	String rawText = SolrInterface.getRawDocument(getOriginalId(id));
+	    	if (rawText==null){
+	    		return null;
+	    	}
 			Object[] processed = Preprocessor.Tokenize(rawText);
 			String offsets = (String) processed[0];
 			String tokens = (String) processed[1];
