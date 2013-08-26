@@ -1,5 +1,3 @@
-package Parser;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,6 +14,8 @@ public class HTbb {
 	public ArrayList<String> entities;
 	public String printing;
 	public HashMap<String, String> results;
+	public int sentencenBegin;
+	public int sentenceEnd;
 	
 	
 	private HTParser p;
@@ -39,17 +39,23 @@ public class HTbb {
 		
 	}
 	
-	public HashMap<String, String> process(String s, ArrayList<String> opinWords, ArrayList<String> entities){
+	public HashMap<String, String> process(String s, ArrayList<String> opinWords, ArrayList<String> entities, int sentenceBegin, int sentenceEnd){
 		HashMap<String, String> results = new HashMap<String, String>();
-		opinWords = opinWords;
-		sentence = s;
-		entities = entities;
+		this.opinWords = opinWords;
+		this.sentence = s;
+		this.entities = entities;
+		this.sentencenBegin = sentenceBegin;
+		this.sentenceEnd = sentenceEnd;
 		
 		p.getDependencyString(sentence);
 		extractHT();
 		rank();
+
+		String opinionOffsets = Integer.toString(sentencenBegin) + "-" + Integer.toString(sentenceEnd);
+		String holderOffsets = Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin+holderSpan.length());
+		String targetOffsets = Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin+targetSpan.length());
 		
-		printing = sentence + "\t" + holderSpan + "\t" + targetSpan;
+		printing = sentence + "\t" + opinionOffsets + "\t" + holderSpan + "\t" + holderOffsets + "\t"+ targetSpan + targetOffsets;
 		results.put("0_"+String.valueOf(s.length()-1), printing);
 		
 		return results;
