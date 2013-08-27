@@ -11,9 +11,9 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class OpinLexiconChecker {
+public class OpinionLexiconChecker {
 	
-	public OpinLexiconChecker() throws IOException{
+	public OpinionLexiconChecker() throws IOException{
 		lexicon = new ArrayList<OpinWord>();
 		lexiconHash = new Hashtable<String, Integer>();
 		opList = new ArrayList<OpinWord>();
