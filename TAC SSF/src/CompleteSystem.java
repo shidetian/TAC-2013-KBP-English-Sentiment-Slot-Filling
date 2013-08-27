@@ -20,8 +20,11 @@ public class CompleteSystem {
 			QueryBundle b = new QueryBundle(q);
 			//Call systems with QueryBundle
 			//This is what you would do if the tree was in Solr Already
-			ProcessedDocument processed = SolrInterface.getProcessedDocument(b.query.docId);
-			int i =0;
+			for (String id : b.docIds){
+				ProcessedDocument processed = SolrInterface.getProcessedDocument(id);
+			//int i =0;
+				System.out.println(id);
+			}
 			//This is how you do it manually
 			/*String rawText = SolrInterface.getRawDocument(b.query.docId);
 			Object[] processed = Preprocessor.Tokenize(rawText);

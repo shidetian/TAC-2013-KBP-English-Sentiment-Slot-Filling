@@ -138,7 +138,7 @@ public class SolrInterface {
 	
 	public static void main(String[] args) throws SolrServerException, ClassNotFoundException, IOException{
 		//System.out.println(getRawDocument("APW_ENG_20090531.0544"));
-		Object temp = getProcessedDocument("APW_ENG_20090531.0544");
+		Object temp = getProcessedDocument("bolt-eng-DF-170-181125-9140399");
 		//getByTexualSearch("CIA");
 	}
 }
