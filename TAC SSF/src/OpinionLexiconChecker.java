@@ -1,5 +1,3 @@
-package opinWords;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -12,26 +10,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OpinionLexiconChecker {
+	public String sentence;
+	public ArrayList<OpinWord> opList;
+	public HashSet<String> polterms;
+	public String polarity;
 	
-	public OpinionLexiconChecker() throws IOException{
-		lexicon = new ArrayList<OpinWord>();
-		lexiconHash = new Hashtable<String, Integer>();
-		opList = new ArrayList<OpinWord>();
-		polterms = new HashSet<String>();
-		/*
-		if (option.contains("gfbf"))
-			gfbfRead();
-		else if (option.contains("DSESE"))
-			DSESERead();
-		else if (option.contains("GI"))
-			GIRead();
-		else{
-		*/
-			gfbfRead();
-			DSESERead();
-			GIRead();
-		//}
-	}
 	
 	private String gfLexiconFileName = "goodFor_manual.csv";
 	private String bfLexiconFileName = "badFor_manual.csv";
@@ -40,10 +23,17 @@ public class OpinionLexiconChecker {
 	private ArrayList<OpinWord> lexicon;
 	private Hashtable<String, Integer> lexiconHash;
 	
-	public String sentence;
-	public ArrayList<OpinWord> opList;
-	public HashSet<String> polterms;
-	
+	public OpinionLexiconChecker() throws IOException{
+		polarity = "neutral";
+		lexicon = new ArrayList<OpinWord>();
+		lexiconHash = new Hashtable<String, Integer>();
+		opList = new ArrayList<OpinWord>();
+		polterms = new HashSet<String>();
+		gfbfRead();
+		DSESERead();
+		GIRead();
+	}
+
 	public HashMap<String, String> runOpinionWordChecker(String line) throws IOException{
 		HashMap<String, String> results = new HashMap<String, String>();
 		sentence = line;
@@ -57,10 +47,15 @@ public class OpinionLexiconChecker {
 				negativeNum++;
 			
 		}
-		if (positiveNum > negativeNum)
+		if (positiveNum > negativeNum){
 			results.put("0_"+String.valueOf(line.length()-1), "positive");
-		else if (positiveNum < negativeNum)
+			polarity = "positive";
+		}
+		
+		else if (positiveNum < negativeNum){
 			results.put("0_"+String.valueOf(line.length()-1), "negative");
+			polarity = "negative";
+		}
 		
 		return results;
 	}
@@ -71,6 +66,11 @@ public class OpinionLexiconChecker {
 		String[] wordsList = line.split(" ");
 		for (int i=0;i<wordsList.length;i++){
 			String word = wordsList[i];
+			
+			// lower case
+			word = word.toLowerCase();
+			// remove puntuation
+			word = word.replaceAll("(\\w+)\\p{Punct}(\\s|$)", "$1$2"); 
 			
 			if (lexiconHash.containsKey(word)){
 				opList.add(lexicon.get(lexiconHash.get(word)));
