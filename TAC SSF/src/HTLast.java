@@ -8,15 +8,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class HTLast {
-	public ArrayList<String> opinWords;
 	public String sentence;
-	public String holderSpan;
-	public String targetSpan;
+	public ArrayList<String> opinWords;
 	public String[] entities;
-	public String printing;
-	public HashMap<String, String> results;
 	public int sentencenBegin;
 	public int sentenceEnd;
+	
+	public String opinionSpan;
+	public String opinionOffsets;
+	public String holderSpan;
+	public String holderOffsets;
+	public String targetSpan;
+	public String targetOffsets;
+	
+	public String printing;
+	public HashMap<String, String> results;
+	
 	
 	
 	private HTParser p;
@@ -44,7 +51,8 @@ public class HTLast {
 		HashMap<String, String> results = new HashMap<String, String>();
 		this.opinWords = opinWords;
 		this.sentence = s;
-		this.entities = (String[]) entities.toArray();
+		this.opinionSpan = s;
+		this.entities = entities.toArray(new String[entities.size()]);
 		this.sentencenBegin = sentenceBegin;
 		this.sentenceEnd = sentenceEnd;
 		
@@ -52,11 +60,11 @@ public class HTLast {
 		extractHT();
 		rank();
 
-		String opinionOffsets = Integer.toString(sentencenBegin) + "-" + Integer.toString(sentenceEnd);
-		String holderOffsets = Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin+holderSpan.length());
-		String targetOffsets = Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin+targetSpan.length());
+		opinionOffsets = Integer.toString(sentencenBegin) + "-" + Integer.toString(sentenceEnd);
+		holderOffsets = Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin+holderSpan.length());
+		targetOffsets = Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin+targetSpan.length());
 		
-		printing = sentence + "\t" + opinionOffsets + "\t" + holderSpan + "\t" + holderOffsets + "\t"+ targetSpan + targetOffsets;
+		printing = opinionSpan + "\t" + opinionOffsets + "\t" + holderSpan + "\t" + holderOffsets + "\t"+ targetSpan + targetOffsets;
 		results.put("0_"+String.valueOf(s.length()-1), printing);
 		
 		return results;
