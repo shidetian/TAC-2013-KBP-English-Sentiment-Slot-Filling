@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,11 +62,13 @@ public class OpinionLexiconChecker {
 	}
 	
 	private ArrayList<OpinWord> lookUp(String line) throws IOException{
+		StanfordLemmatizer SL = new StanfordLemmatizer();
+		
 		opList = new ArrayList<OpinWord>();
 		
-		String[] wordsList = line.split(" ");
-		for (int i=0;i<wordsList.length;i++){
-			String word = wordsList[i];
+		List<String> lemmasList = SL.lemmatize(line);
+		for (int i=0;i<lemmasList.size();i++){
+			String word = lemmasList.get(i);
 			
 			// lower case
 			word = word.toLowerCase();
