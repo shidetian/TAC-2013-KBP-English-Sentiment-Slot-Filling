@@ -24,8 +24,6 @@ public class HTLast {
 	public String printing;
 	public HashMap<String, String> results;
 	
-	
-	
 	private HTParser p;
 	private Hashtable<String,Integer> holderCandidatesLength;
 	private Hashtable<String,Integer> targetCandidatesLength;
@@ -36,7 +34,6 @@ public class HTLast {
 
 	public HTLast(){
 		
-		this.p = new HTParser();
 		this.holderCandidatesLength = new Hashtable<String,Integer>();
 		this.targetCandidatesLength = new Hashtable<String,Integer>();
 		this.holderCandidatesTimes = new Hashtable<String,Integer>();
@@ -47,16 +44,18 @@ public class HTLast {
 		
 	}
 	
-	public HashMap<String, String> process(String s, ArrayList<String> opinWords, HashSet<String> entities, int sentenceBegin, int sentenceEnd){
+	public HashMap<String, String> process(String s, HTParser p, ArrayList<String> opinWords, HashSet<String> entities, int sentenceBegin, int sentenceEnd){
 		HashMap<String, String> results = new HashMap<String, String>();
-		this.opinWords = opinWords;
+		
 		this.sentence = s;
 		this.opinionSpan = s;
+		this.p = p;
+		this.opinWords = opinWords;
 		this.entities = entities.toArray(new String[entities.size()]);
 		this.sentencenBegin = sentenceBegin;
 		this.sentenceEnd = sentenceEnd;
 		
-		p.getDependencyString(sentence);
+		//p.getDependencyString(sentence);
 		extractHT();
 		rank();
 
