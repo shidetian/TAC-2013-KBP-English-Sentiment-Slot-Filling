@@ -6,7 +6,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -17,23 +16,29 @@ public class NEReader {
 	 * @param args
 	 */
 	static String path;
-	static HashMap<Integer, String> NEset;
+	static HashMap<Integer, NamedEntity> NEset;
 	
 	public NEReader(String path){
 		this.path = path;
-		this.NEset = new HashMap<Integer, String>();
+		this.NEset = new HashMap<Integer, NamedEntity>();
 	}
 	
-	public static HashSet<String> getNEs(int beg, int end){
-		HashSet<String> nes = new HashSet<String>();
+	public static List<NamedEntity> getNEs(int beg, int end){
+		List<NamedEntity> nes = new ArrayList<NamedEntity>();
 		
 		Set<Integer> keyset = NEset.keySet();
 		Iterator<Integer> iter = keyset.iterator();
 		while(iter.hasNext()){
 			int idx = iter.next();
-			if((idx >= beg) && (idx <= end))
+			NamedEntity temp = NEset.get(idx);
+			//System.out.println(idx + " : " + temp.entity + " , " + temp.entityid + " , " + temp.beg);
+			
+			if((idx >= beg) && (idx <= end)){
+				//System.out.println("check! : " + idx + " , " + temp.entity);
 				nes.add(NEset.get(idx));
+			}
 		}
+		
 		
 		return nes;
 	}
@@ -59,7 +64,7 @@ public class NEReader {
 		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(XMLpath));
 		doc.normalizeDocument();
 		
-		NEset = new HashMap<Integer, String>();
+		NEset = new HashMap<Integer, NamedEntity>();
 		
 		//System.out.println(doc.getDocumentElement().getNodeName());
 		if (!doc.getDocumentElement().getNodeName().equals("source_file")){
@@ -71,6 +76,8 @@ public class NEReader {
 		
 		for(int i=0; i<entities.getLength(); i++){
 			Element entity = (Element) entities.item(i);
+			String entityid = entity.getAttribute("ID");
+			//System.out.println(entityid);
 			NodeList mentions = entity.getElementsByTagName("entity_mention");
 			//System.out.println("mention: " + mentions.getLength());
 			
@@ -85,7 +92,9 @@ public class NEReader {
 					int end = Integer.parseInt(info.getAttribute("END"));
 					String ne = info.getTextContent();
 					
-					NEset.put(beg, ne);
+					//Entity e = ;
+					//System.out.println(ne + ", " + beg);
+					NEset.put(beg, new NamedEntity(entityid, ne, beg, end));
 				}
 			}
 		}
@@ -121,15 +130,23 @@ public class NEReader {
 		writer.close();
 	}
 
-	/*public static void main(String[] args) throws SAXException {
+	public static void main(String[] args) throws SAXException {
 		// TODO Auto-generated method stub
 
 		try {
-			parseFile("bolt-eng-DF-170-181103-8881817.sgm.apf.new", 0, 0);
+			NEReader ner = new NEReader("temp");
+			ner.parseNEs("bolt-eng-DF-170-181103-8881817");
+			List<NamedEntity> results = ner.getNEs(0, 1000);
+
+			for(NamedEntity result : results){
+				System.out.println(result.entityid + " , " + result.entity + " , " + result.beg);
+			}
 			//System.out.println("# queries: " + qs.size());
-		} catch (IOException | ParserConfigurationException e) {
+		} catch (IOException e) { 
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			
 		}
-	}*/
+	}
 }
