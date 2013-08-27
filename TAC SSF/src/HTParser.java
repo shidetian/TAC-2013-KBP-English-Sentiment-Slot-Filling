@@ -31,7 +31,7 @@ public class HTParser {
 	
 	public String getDependencyString(String sentence){
 		LexicalizedParser lp =  LexicalizedParser.loadModel(
-				"parsers/englishPCFG.ser.gz","-maxLength", "80");
+				"englishPCFG.ser.gz","-maxLength", "80");
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
 
