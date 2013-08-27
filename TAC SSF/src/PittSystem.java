@@ -99,12 +99,16 @@ public class PittSystem {
 					}
 					
 					// Holder and Target Detection
-					String dep = HTParser.getDependencyString(sent.sent);
+					String dep = parser.getDependencyString(sent.sent);
 					List<NamedEntity> NEs = ner.getNEs(sent.beg, sent.end);
+					HashSet<String> NEsInString = new HashSet<String>();
+					for (NamedEntity ne : NEs){
+						NEsInString.add(ne.entity);
+					}
 						
 					HashMap<String, String> oht = ht.process(sent, dep, polterms, NEs);
 					// Opin Word Checker
-					oht.putAll(htLingjia.process(sent.sent, ow.polterms, NEs, sent.beg, sent.end));
+					oht.putAll(htLingjia.process(sent.sent, parser, ow.polterms, NEsInString, sent.beg, sent.end));
 					
 					keyset = oht.keySet();
 					iter = keyset.iterator();
