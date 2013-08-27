@@ -1,11 +1,13 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrInputDocument;
 
 import edu.stanford.nlp.trees.Tree;
 
@@ -61,9 +63,27 @@ public class SolrInterface {
 	    		return null;
 	    	}
 			Object[] processed = Preprocessor.Tokenize(rawText);
+			
 			String offsets = (String) processed[0];
 			String tokens = (String) processed[1];
 			ArrayList<Tree> trees = (ArrayList<Tree>) Preprocessor.fromBase64((byte[]) processed[2]);
+			
+			//Cache in Solr
+			SolrInputDocument doc = new SolrInputDocument();
+			doc.addField("id", getOriginalId(id));
+			HashMap<String, String> offsetUpdate = new HashMap<String, String>();
+			offsetUpdate.put("set", offsets);
+			HashMap<String, String> tokensUpdate = new HashMap<String, String>();
+			tokensUpdate.put("set", tokens);
+			HashMap<String, Object> treesUpdate = new HashMap<String, Object>();
+			treesUpdate.put("set", processed[2]);
+			
+			doc.addField("offsets", offsetUpdate);
+			doc.addField("tokens", tokensUpdate);
+			doc.addField("tree", treesUpdate);
+			
+			server.add(doc, 10000); //commit within 10 seconds
+			
 	    	return new ProcessedDocument(offsets,tokens, trees);
 	    }
 	}
@@ -117,8 +137,8 @@ public class SolrInterface {
 	}*/
 	
 	public static void main(String[] args) throws SolrServerException, ClassNotFoundException, IOException{
-		System.out.println(getRawDocument("APW_ENG_20090531.0544"));
-		//Object temp = getProcessedDocument("APW_ENG_20090531.0544");
+		//System.out.println(getRawDocument("APW_ENG_20090531.0544"));
+		Object temp = getProcessedDocument("APW_ENG_20090531.0544");
 		//getByTexualSearch("CIA");
 	}
 }
