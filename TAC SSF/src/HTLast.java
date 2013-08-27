@@ -7,7 +7,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class HTbb {
+public class HTLast {
 	public ArrayList<String> opinWords;
 	public String sentence;
 	public String holderSpan;
