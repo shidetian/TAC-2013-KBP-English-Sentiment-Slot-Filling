@@ -1,9 +1,8 @@
-
 public class NamedEntity {
-	String entityid;
-	String entity;
-	int beg;
-	int end;
+	public String entityid;
+	public String entity;
+	public int beg;
+	public int end;
 	
 	public NamedEntity(String id, String entity, int beg, int end){
 		this.entityid = id;
