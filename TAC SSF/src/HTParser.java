@@ -14,10 +14,12 @@ import edu.stanford.nlp.trees.TypedDependency;
 
 public class HTParser {
 	
+	static LexicalizedParser lp;
+	
 	public HTParser(){
 		dependencyString = null;
 		dependencyTripleList = new ArrayList<dependencyTriple>();
-		
+		lp =  LexicalizedParser.loadModel("englishPCFG.ser.gz","-maxLength", "80");
 	}
 	
 	public String dependencyString;
@@ -30,8 +32,6 @@ public class HTParser {
 	}
 	
 	public String getDependencyString(String sentence){
-		LexicalizedParser lp =  LexicalizedParser.loadModel(
-				"englishPCFG.ser.gz","-maxLength", "80");
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
 
