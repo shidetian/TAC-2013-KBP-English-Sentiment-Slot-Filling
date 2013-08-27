@@ -27,7 +27,7 @@ public class HTbb {
 	private Hashtable<String,Float> holderHash;
 	private Hashtable<String,Float> targetHash;
 
-	public HTbb(){
+	public HTLast(){
 		
 		this.p = new HTParser();
 		this.holderCandidatesLength = new Hashtable<String,Integer>();
