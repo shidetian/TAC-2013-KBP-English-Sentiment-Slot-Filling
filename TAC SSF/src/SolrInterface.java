@@ -10,7 +10,7 @@ import org.apache.solr.common.SolrDocumentList;
 import edu.stanford.nlp.trees.Tree;
 
 public class SolrInterface {
-	static HttpSolrServer server = new HttpSolrServer("http://ec2-23-20-151-240.compute-1.amazonaws.com:8983/solr/");
+	static HttpSolrServer server = new HttpSolrServer("http://54.221.246.163:8983/solr/");
 	
 	public static String getOriginalId(String id){
 		if (id.contains(".")){
