@@ -15,18 +15,20 @@ public class PittSystem {
 	static OpinionFinder of;
 	static OpinionLexiconChecker ow;
 	static SentenceSplitter ss;
+	static HTParser parser;
 	static HTDetection ht;
 	static HTbb htLingjia;
-	static NEReader NE;
+	static NEReader ner;
 	
 	// Initialize Pitt System
 	public PittSystem(){
 		ss = new SentenceSplitter("edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger");
 		of = new OpinionFinder();
+		parser = new HTParser();
 		ow = new OpinionLexiconChecker();
 		ht = new HTDetection();
 		htLingjia = new HTbb();
-		NE = new NEReader("");
+		ner = new NEReader("");
 	}
 	
 	public void run(QueryBundle qb){
@@ -65,6 +67,8 @@ public class PittSystem {
 				String str = new String(newStr);
 				//System.out.println(str);
 				
+				ner.parseNEs(docid);
+				
 				List<Sentence> sents = ss.process(str);
 				
 				for(Sentence sent : sents){
@@ -75,13 +79,11 @@ public class PittSystem {
 					if(temp.length() <= 1)
 						continue;
 						
-					Set<String> NEs = NE.parseFile(docid, sent.beg, sent.end);
-					
+					// OpinionFinder
 					HashMap<String, String> pol = opinionFinder.runOpinionFinder(sent.sent);
 					// Opin Word Checker
 					pol.putAll(ow.runOpinionWordChecker(sent.sent))；
-					
-					
+						
 					HashMap<String, String> polarity = new HashMap<String, String>();
 					String sSpan = Integer.toString(sent.beg).concat("-").concat(Integer.toString(sent.end));
 					
@@ -96,7 +98,11 @@ public class PittSystem {
 						polarity.put(sent.sent.substring(Integer.parseInt(toks[0]), Integer.parseInt(toks[1])), pol.get(offset));
 					}
 					
-					HashMap<String, String> oht = ht.process(sent, polterms);
+					// Holder and Target Detection
+					String dep = HTParser.getDependencyString(sent.sent);
+					List<NamedEntity> NEs = ner.getNEs(sent.beg, sent.end);
+						
+					HashMap<String, String> oht = ht.process(sent, dep, polterms, NEs);
 					// Opin Word Checker
 					oht.putAll(htLingjia.process(sent.sent, ow.polterms, NEs, sent.beg, sent.end));
 					
