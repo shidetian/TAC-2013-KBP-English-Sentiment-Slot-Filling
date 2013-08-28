@@ -59,8 +59,9 @@ public class EntitySplitter {
 				Matcher m = p.matcher(current.substring(0, current.indexOf('\n')));
 				//System.out.println(current);
 				m.matches();
-				System.out.println(m.group(1));
-				//currentDoc.addField("id", (Object)42);
+				//System.out.println(m.group(1));
+				currentDoc.addField("id", m.group(1));
+				currentDoc.addField("content", current);
 			}
 		}
 	}
