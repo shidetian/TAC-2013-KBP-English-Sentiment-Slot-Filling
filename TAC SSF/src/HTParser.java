@@ -3,8 +3,6 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.stanford.nlp.ling.Sentence;
-import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.trees.GrammaticalStructure;
 import edu.stanford.nlp.trees.GrammaticalStructureFactory;
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
@@ -25,9 +23,7 @@ public class HTParser {
 		//lp =  LexicalizedParser.loadModel("englishPCFG.ser.gz","-maxLength", "80");
 	}
 	
-	public void updateDependencyString(String dependency){
-		dependencyString = dependency;
-	}
+	
 	
 	class dependencyTriple{
 		public String gov;
@@ -35,6 +31,7 @@ public class HTParser {
 		public String relation;
 	}
 	
+	/*
 	public String getDependencyString(String sentence){
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
@@ -47,6 +44,17 @@ public class HTParser {
 		
 		return dependencyString;
 	
+	}*/
+	
+	public String getDependencyString(Tree tree){
+		
+		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
+		GrammaticalStructure gs = gsf.newGrammaticalStructure(tree);
+		Collection<TypedDependency> tdl = gs.typedDependenciesCCprocessed();
+		dependencyString = tdl.toString();
+		
+		return dependencyString;
 	}
 	
 	private void getDependencyTripleList(){
