@@ -29,13 +29,13 @@ public class EntitySplitter {
 		boolean start = false;
 		while ((current = file.readLine())!=null){
 			//System.out.println(current);
-			if (current.contains("<entity")){
+			if (current.contains("<document")){
 				start = true;
 			}
 			if (start){
 				out.append(current+"\n");
 			}
-			if (current.contains("</entity>")){
+			if (current.contains("</document>")){
 				return out.toString();
 			}
 		}
@@ -44,7 +44,7 @@ public class EntitySplitter {
 
 	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException, SolrServerException {
 		HttpSolrServer server = new HttpSolrServer("http://54.221.246.163:8984/solr/");
-		Pattern p = Pattern.compile("^.*ID=\\\"(\\S*)\\\".*$");
+		Pattern p = Pattern.compile("^.*DOCID=\\\"(\\S*)\\\".*$");
 		File folder = new File(args[0]);
 		File[] files = null;
 		if (folder.isDirectory()){
@@ -60,7 +60,7 @@ public class EntitySplitter {
 				Matcher m = p.matcher(current.substring(0, current.indexOf('\n')));
 				//System.out.println(current);
 				m.matches();
-				//System.out.println(m.group(1));
+				System.out.println(m.group(1));
 				currentDoc.addField("id", m.group(1));
 				currentDoc.addField("content", current);
 				server.add(currentDoc);

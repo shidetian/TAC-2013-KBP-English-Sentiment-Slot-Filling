@@ -19,11 +19,16 @@ public class DocumentSplitter {
 	//Returns the next document or null
 	public String getNext() throws IOException{
 		StringBuffer out = new StringBuffer();
-		String current;
-		while ((current = file.readLine())!=null){
-			out.append(current+"\r\n");
-			if (current.equalsIgnoreCase("</doc>")){
-				return out.toString();
+		String current = "";
+		char letter;
+		while ((letter = (char) file.read())!=-1){
+			current+=letter;
+			if (letter=='\n'){
+				out.append(current);
+				if (current.toLowerCase().contains("</doc>")){
+					return out.toString();
+				}
+				current = "";
 			}
 		}
 		return null;

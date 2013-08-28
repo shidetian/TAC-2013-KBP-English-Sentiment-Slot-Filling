@@ -68,10 +68,10 @@ public class CorpusHandler{
 				if (category.equals("web")){
 					//TODO: call clean
 				}
-				Object[] preprocess = Preprocessor.Tokenize(StripXMLTags.strip(wholeDoc).toString());
+				/*Object[] preprocess = Preprocessor.Tokenize(StripXMLTags.strip(wholeDoc).toString());
 				currentDoc.addField("offsets", preprocess[0]);
 				currentDoc.addField("tokens", preprocess[1]);
-				currentDoc.addField("tree", preprocess[2]);
+				currentDoc.addField("tree", preprocess[2]);*/
 			}
 		}else if (qName.equalsIgnoreCase("DOCID")){
 			//Should happen in web documents only
@@ -102,6 +102,13 @@ public class CorpusHandler{
 				
 				try {
 					SolrImporter.addDoc(server,currentDoc);
+					
+					/*//Make sure offsets are correct
+					String rawText = SolrInterface.getRawDocument(baseID);
+					int diff = StripXMLTags.verify(wholeDoc, new StringBuffer(rawText));
+					if (diff!=-1){
+						System.out.println(diff+":'(");
+					}*/
 				} catch (SolrServerException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
