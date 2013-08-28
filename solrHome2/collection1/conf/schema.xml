@@ -269,7 +269,7 @@
 
    <!-- Text fields from SolrCell to search by default in our catch-all field -->
    <!--<copyField source="title" dest="text"/>-->
-   <copyField source="author" dest="text"/>
+   <!--<copyField source="author" dest="text"/>-->
    <!--<copyField source="description" dest="text"/>
    <copyField source="keywords" dest="text"/>-->
    <copyField source="content" dest="text"/>
@@ -278,7 +278,7 @@
    <copyField source="url" dest="text"/>-->
 
    <!-- Create a string version of author for faceting -->
-   <copyField source="author" dest="author_s"/>
+   <!--<copyField source="author" dest="author_s"/>-->
 	
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
