@@ -28,7 +28,7 @@ public class PittSystem {
 		ow = new OpinionLexiconChecker();
 		ht = new HTDetection();
 		htLingjia = new HTbb();
-		ner = new NEReader("");
+		ner = new NEReader("//home/carmen/KBP-annotations");
 	}
 	
 	public void run(QueryBundle qb){
