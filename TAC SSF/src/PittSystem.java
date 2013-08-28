@@ -63,6 +63,17 @@ public class PittSystem {
 				
 				//System.out.println(docid + " : " + fromIndex + "\n" + text);
 				
+				String author = "";
+				String aidx = "";
+				
+				if(text.contains("<post author=")){
+					int tidx = text.indexOf("<post author");
+					int sidx = text.indexOf("\"", tidx)+1;
+					int eidx = text.indexOf("\"", sidx);
+					author = text.substring(sidx, eidx);
+					aidx = Integer.toString(sidx+fromIndex).concat("-").concat(Integer.toString(eidx+fromIndex));
+				}
+				
 				StringBuffer newStr = StripXMLTags.strip(text);
 				String str = new String(newStr);
 				//System.out.println(str);
