@@ -109,9 +109,12 @@ public class PittSystem {
 						polarity.put(sent.sent.substring(Integer.parseInt(toks[0]), Integer.parseInt(toks[1])), pol.get(offset));
 					}
 					
-					// get the dependency string~!!!
-					// where is tree...???
-					String dep = parser.getDependencyString(sent.sent);
+					// get the dependency string
+					// where is tree...?
+					String dep = parser.getDependencyStringFromSentence(sent.sent);
+					// the next line is getting the depdency from tree object
+					//String dep = parser.getDependencyStringFromTree(tree);
+					
 					// Holder and Target Detection
 					List<NamedEntity> NEs = ner.getNEs(sent.beg, sent.end);
 					HashSet<String> NEsInString = new HashSet<String>();
