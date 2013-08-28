@@ -58,8 +58,8 @@ public class SentimentEnsemble{
 				if (sameHT(sentimentList.get(i), sentimentList.get(j))){
 					
 					checked.put(j, i);
-					sentimentList.get(i).holderOffsets = ","+sentimentList.get(j).holderOffsets;
-					sentimentList.get(i).targetOffsets = ","+sentimentList.get(j).targetOffsets;
+					sentimentList.get(i).holderOffsets += ","+sentimentList.get(j).holderOffsets;
+					sentimentList.get(i).targetOffsets += ","+sentimentList.get(j).targetOffsets;
 					sentimentListEnsembled.add(sentimentList.get(i));
 					
 					/*
