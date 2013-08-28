@@ -17,7 +17,7 @@ public class PittSystem {
 	static SentenceSplitter ss;
 	static HTParser parser;
 	static HTDetection ht;
-	static HTbb htLingjia;
+	static HTLast htLingjia;
 	static NEReader ner;
 	
 	// Initialize Pitt System
