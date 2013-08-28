@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrInputDocument;
 
@@ -41,7 +42,7 @@ public class EntitySplitter {
 		return null;
 	}
 
-	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException, SolrServerException {
 		HttpSolrServer server = new HttpSolrServer("http://54.221.246.163:8984/solr/");
 		Pattern p = Pattern.compile("^.*ID=\\\"(\\S*)\\\".*$");
 		File folder = new File(args[0]);
@@ -62,7 +63,9 @@ public class EntitySplitter {
 				//System.out.println(m.group(1));
 				currentDoc.addField("id", m.group(1));
 				currentDoc.addField("content", current);
+				server.add(currentDoc);
 			}
+			server.commit();
 		}
 	}
 
