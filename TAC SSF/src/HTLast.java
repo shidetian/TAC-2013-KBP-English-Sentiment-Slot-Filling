@@ -133,13 +133,17 @@ public class HTLast {
 	}
 	
 	private void rank(){
+		if (holderCandidatesLength.isEmpty()){
+			holderSpan = "";
+		}
+		else{
 		for (String holder: holderCandidatesLength.keySet()){
 			if (holder == null)
 				continue;
 			holderHash.put(holder, holderCandidatesLength.get(holder)/(float)holderCandidatesTimes.get(holder) );
 		}
 
-		//Sort
+		// Sort
 		ArrayList<Map.Entry<String, Float>> l = new ArrayList<Entry<String, Float>>(holderHash.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Float>>(){
 
@@ -147,11 +151,15 @@ public class HTLast {
 				return o2.getValue().compareTo(o1.getValue());
 			}});
 		
-		//output
+		// output
 		holderSpan = l.get(0).getKey();
+		}
 		
 		/////////////////////////////////////////////////
-
+		if (targetCandidatesLength.isEmpty()){
+			targetSpan = "";
+		}
+		else{
 		for (String target: targetCandidatesLength.keySet()){
 			if (target == null)
 				continue;
@@ -159,7 +167,7 @@ public class HTLast {
 		}
 
 		//Sort
-		l = new ArrayList<Entry<String, Float>>(targetHash.entrySet());
+		ArrayList<Map.Entry<String, Float>> l = new ArrayList<Entry<String, Float>>(targetHash.entrySet());
 		Collections.sort(l, new Comparator<Map.Entry<String, Float>>(){
 
 			public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
@@ -168,6 +176,7 @@ public class HTLast {
 		
 		//output
 		targetSpan = l.get(0).getKey();
+		}
 
 	}
 
