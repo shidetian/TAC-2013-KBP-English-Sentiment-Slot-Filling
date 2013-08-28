@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 //This class splits a corpus file into individual documents
-public class DocumentSplitter {
-	//Pattern endTag = Pattern.compile("</[Dd][Oo][Cc]>");
+public class EntitySplitter {
+	//Pattern endTag = Pattern.compile("</entity>");
 	BufferedReader file;
-	DocumentSplitter(InputStream file) throws UnsupportedEncodingException{
+	EntitySplitter(InputStream file) throws UnsupportedEncodingException{
 		this.file = new BufferedReader(new InputStreamReader(file, "UTF-8"));
 	}
 	
@@ -20,9 +20,16 @@ public class DocumentSplitter {
 	public String getNext() throws IOException{
 		StringBuffer out = new StringBuffer();
 		String current;
+		boolean start = false;
 		while ((current = file.readLine())!=null){
-			out.append(current);
-			if (current.equalsIgnoreCase("</doc>")){
+			//System.out.println(current);
+			if (current.contains("<entity")){
+				start = true;
+			}
+			if (start){
+				out.append(current);
+			}
+			if (current.contains("</entity>")){
 				return out.toString();
 			}
 		}
@@ -30,7 +37,7 @@ public class DocumentSplitter {
 	}
 
 	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-		DocumentSplitter ds = new DocumentSplitter(new GZIPInputStream(new FileInputStream(args[0])));
+		EntitySplitter ds = new EntitySplitter((new FileInputStream(args[0])));
 		String current;
 		while ((current=ds.getNext())!=null){
 			System.out.println(current+"\n=======");

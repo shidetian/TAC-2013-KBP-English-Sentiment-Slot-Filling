@@ -25,12 +25,6 @@ public class CompleteSystem {
 			//int i =0;
 				System.out.println(id);
 			}
-			//This is how you do it manually
-			/*String rawText = SolrInterface.getRawDocument(b.query.docId);
-			Object[] processed = Preprocessor.Tokenize(rawText);
-			String offsets = (String) processed[0];
-			String tokens = (String) processed[1];
-			ArrayList<Tree> trees = (ArrayList<Tree>) Preprocessor.fromBase64((byte[]) processed[2]);*/
 		}
 	}
 
