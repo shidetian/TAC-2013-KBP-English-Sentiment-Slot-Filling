@@ -12,7 +12,7 @@ import edu.stanford.nlp.trees.TypedDependency;
 
 public class HTParser {
 	
-	//static LexicalizedParser lp;
+	static LexicalizedParser lp;
 	
 	public String dependencyString;
 	public ArrayList<dependencyTriple> dependencyTripleList;
@@ -20,7 +20,7 @@ public class HTParser {
 	public HTParser(){
 		dependencyString = null;
 		dependencyTripleList = new ArrayList<dependencyTriple>();
-		//lp =  LexicalizedParser.loadModel("englishPCFG.ser.gz","-maxLength", "80");
+		lp =  LexicalizedParser.loadModel("englishPCFG.ser.gz","-maxLength", "80");
 	}
 	
 	
@@ -31,22 +31,23 @@ public class HTParser {
 		public String relation;
 	}
 	
-	/*
-	public String getDependencyString(String sentence){
-		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
-		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
-
+	
+	public String getDependencyStringFromSentence(String sentence){
+		
 		String[] sent = sentence.split(" ");
 		Tree parse = lp.apply(Sentence.toWordList(sent));
+		
+		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
+		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
 		GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
 		Collection<TypedDependency> tdl = gs.typedDependenciesCCprocessed();
 		dependencyString = tdl.toString();
 		
 		return dependencyString;
 	
-	}*/
+	}
 	
-	public String getDependencyString(Tree tree){
+	public String getDependencyStringFromTree(Tree tree){
 		
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
