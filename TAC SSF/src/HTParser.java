@@ -14,16 +14,20 @@ import edu.stanford.nlp.trees.TypedDependency;
 
 public class HTParser {
 	
-	static LexicalizedParser lp;
+	//static LexicalizedParser lp;
+	
+	public String dependencyString;
+	public ArrayList<dependencyTriple> dependencyTripleList;
 	
 	public HTParser(){
 		dependencyString = null;
 		dependencyTripleList = new ArrayList<dependencyTriple>();
-		lp =  LexicalizedParser.loadModel("englishPCFG.ser.gz","-maxLength", "80");
+		//lp =  LexicalizedParser.loadModel("englishPCFG.ser.gz","-maxLength", "80");
 	}
 	
-	public String dependencyString;
-	public ArrayList<dependencyTriple> dependencyTripleList;
+	public void updateDependencyString(String dependency){
+		dependencyString = dependency;
+	}
 	
 	class dependencyTriple{
 		public String gov;
