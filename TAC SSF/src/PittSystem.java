@@ -117,7 +117,7 @@ public class PittSystem {
 						NEsInString.add(ne.entity);
 					}
 						
-					HashMap<String, String> oht = ht.process(sent, dep, polterms, NEs);
+					HashMap<String, String> oht = ht.process(sent, dep, polterms, NEs, author, aidx);
 					// Opin Word Checker
 					oht.putAll(htLingjia.process(sent.sent, parser, ow.polterms, NEsInString, sent.beg, sent.end));
 					
