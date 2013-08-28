@@ -33,7 +33,7 @@ public class PittSystem {
 	
 	public void run(QueryBundle qb){
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter("PittSystem_output.txt"));
+			BufferedWriter bw = new BufferedWriter(new FileWriter("pitt_output.txt"));
 			
 			for(String docid : qb.docIds){
 				System.out.println("ID: " + docid);
