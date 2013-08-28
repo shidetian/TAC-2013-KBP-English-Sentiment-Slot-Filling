@@ -21,7 +21,7 @@ public class DocumentSplitter {
 		StringBuffer out = new StringBuffer();
 		String current;
 		while ((current = file.readLine())!=null){
-			out.append(current);
+			out.append(current+"\n");
 			if (current.equalsIgnoreCase("</doc>")){
 				return out.toString();
 			}
