@@ -80,21 +80,37 @@ public class NEReader {
 			//System.out.println(entityid);
 			NodeList mentions = entity.getElementsByTagName("entity_mention");
 			//System.out.println("mention: " + mentions.getLength());
+			NodeList resolutions = entity.getElementsByTagName("entity_resolution");
+			//System.out.println("Resolution: " + resolutions.getLength());
+			
+			if(mentions.getLength() != resolutions.getLength()){
+				System.out.println("File Error");
+				return;
+			}
 			
 			for(int j=0; j<mentions.getLength(); j++){
 				Element mention = (Element) mentions.item(j);
 				NodeList extents = mention.getElementsByTagName("extent");
+				HashMap<String, Double> ERs = new HashMap<String, Double>();
+				
+				Element entity_resolution = (Element) resolutions.item(j);
+				NodeList resolutionList = entity_resolution.getElementsByTagName("resolution");
+				//System.out.println("# Resolution: " + resolutionList.getLength());
+				
+				for(int k=0; k<resolutionList.getLength(); k++){
+					Element resolution = (Element)resolutionList.item(k);
+					ERs.put(resolution.getTextContent(), Double.parseDouble(resolution.getAttribute("PROBABILITY")));
+					//System.out.println(resolution.getTextContent() + " , " + Double.parseDouble(resolution.getAttribute("PROBABILITY")));
+				}
 				
 				for(int k=0; k<extents.getLength(); k++){
-					Element extent = (Element) extents.item(k);
+					Element extent = (Element)extents.item(k);
 					Element info = (Element)extent.getElementsByTagName("charseq").item(0);
 					int beg = Integer.parseInt(info.getAttribute("START"));
 					int end = Integer.parseInt(info.getAttribute("END"));
 					String ne = info.getTextContent();
 					
-					//Entity e = ;
-					//System.out.println(ne + ", " + beg);
-					NEset.put(beg, new NamedEntity(entityid, ne, beg, end));
+					NEset.put(beg, new NamedEntity(entityid, ne, beg, end, ERs));
 				}
 			}
 		}
@@ -136,10 +152,11 @@ public class NEReader {
 		try {
 			NEReader ner = new NEReader("temp");
 			ner.parseNEs("bolt-eng-DF-170-181103-8881817");
-			List<NamedEntity> results = ner.getNEs(0, 1000);
+			List<NamedEntity> results = ner.getNEs(0, 10000);
 
 			for(NamedEntity result : results){
 				System.out.println(result.entityid + " , " + result.entity + " , " + result.beg);
+				System.out.println("  " + result.resolutions);
 			}
 			//System.out.println("# queries: " + qs.size());
 		} catch (IOException e) { 
