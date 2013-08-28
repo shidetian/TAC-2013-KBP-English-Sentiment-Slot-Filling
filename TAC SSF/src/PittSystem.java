@@ -27,7 +27,7 @@ public class PittSystem {
 		parser = new HTParser();
 		ow = new OpinionLexiconChecker();
 		ht = new HTDetection();
-		htLingjia = new HTbb();
+		htLingjia = new HTLast();
 		ner = new NEReader("//home/carmen/KBP-annotations");
 	}
 	
@@ -111,7 +111,7 @@ public class PittSystem {
 					
 					// get the dependency string~!!!
 					// where is tree...???
-					String dep = parser.getDependencyString(tree);
+					String dep = parser.getDependencyString(sent.sent);
 					// Holder and Target Detection
 					List<NamedEntity> NEs = ner.getNEs(sent.beg, sent.end);
 					HashSet<String> NEsInString = new HashSet<String>();
