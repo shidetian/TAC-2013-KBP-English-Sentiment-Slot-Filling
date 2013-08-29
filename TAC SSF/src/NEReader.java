@@ -144,6 +144,9 @@ public class NEReader {
 		
 		reader.close();
 		writer.close();
+		
+		File tmp = new File(filepath);
+		tmp.delete();
 	}
 
 	public static void main(String[] args) throws SAXException {
