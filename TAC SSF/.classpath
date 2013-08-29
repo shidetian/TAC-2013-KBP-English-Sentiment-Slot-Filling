@@ -35,11 +35,10 @@
 	<classpathentry kind="lib" path="lib/zookeeper-3.4.5.jar"/>
 	<classpathentry kind="lib" path="lib/wstx-asl-3.2.7.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/stanford-parser.jar"/>
-	<classpathentry kind="lib" path="lib/stanford-parser-3.2.0-models.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/opinionFinder.jar"/>
 	<classpathentry kind="lib" path="lib/stanford-corenlp-3.2.0.jar"/>
 	<classpathentry kind="lib" path="lib/weka.jar"/>
+	<classpathentry kind="lib" path="lib/stanford-corenlp-3.2.0-models.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
