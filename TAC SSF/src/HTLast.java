@@ -63,7 +63,7 @@ public class HTLast {
 		holderOffsets = Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin+holderSpan.length());
 		targetOffsets = Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin+targetSpan.length());
 		
-		printing = opinionSpan + "\t" + opinionOffsets + "\t" + holderSpan + "\t" + holderOffsets + "\t"+ targetSpan + targetOffsets;
+		printing = opinionSpan + "\t" + opinionOffsets + "\t" + holderSpan + "\t" + holderOffsets + "\t"+ targetSpan + "\t" + targetOffsets;
 		results.put("0_"+String.valueOf(s.length()-1), printing);
 		
 		return results;
