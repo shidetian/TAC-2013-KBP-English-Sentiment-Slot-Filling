@@ -8,8 +8,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.GZIPInputStream;
-
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrInputDocument;
@@ -55,6 +53,7 @@ public class EntitySplitter {
 		for (File f: files){
 			EntitySplitter ds = new EntitySplitter((new FileInputStream(f)));
 			String current;
+			System.out.println("Processing:"+f.getName());
 			while ((current=ds.getNext())!=null){
 				SolrInputDocument currentDoc = new SolrInputDocument();
 				Matcher m = p.matcher(current.substring(0, current.indexOf('\n')));

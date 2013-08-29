@@ -62,7 +62,7 @@ public class SolrInterface {
 	    	if (rawText==null){
 	    		return null;
 	    	}
-			Object[] processed = Preprocessor.Tokenize(rawText);
+			Object[] processed = Preprocessor.Tokenize(StripXMLTags.strip(rawText).toString());
 			
 			String offsets = (String) processed[0];
 			String tokens = (String) processed[1];
@@ -137,7 +137,7 @@ public class SolrInterface {
 	}*/
 	
 	public static void main(String[] args) throws SolrServerException, ClassNotFoundException, IOException{
-		//System.out.println(getRawDocument("APW_ENG_20090531.0544"));
+		String s = (getRawDocument("APW_ENG_20090531.0544"));
 		Object temp = getProcessedDocument("bolt-eng-DF-170-181125-9140399");
 		//getByTexualSearch("CIA");
 	}
