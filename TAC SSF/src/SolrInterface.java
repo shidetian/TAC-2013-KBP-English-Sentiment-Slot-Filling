@@ -16,7 +16,7 @@ public class SolrInterface {
 	
 	public static String getOriginalId(String id){
 		if (id.contains(".")){
-			if (id.charAt(id.indexOf('.')+1)=='0'){
+			if (id.charAt(id.indexOf('.')+1)=='0' || (id.substring(id.indexOf('.')+1).length()==4 && id.charAt(id.indexOf('.')+1)!='p')){
 				return id;
 			}else return id.substring(0, id.indexOf('.'));
 		}else{
@@ -137,7 +137,7 @@ public class SolrInterface {
 	}*/
 	
 	public static void main(String[] args) throws SolrServerException, ClassNotFoundException, IOException{
-		String s = (getRawDocument("APW_ENG_20090531.0544"));
+		String s = (getRawDocument("APW_ENG_20090623.1102"));
 		Object temp = getProcessedDocument("bolt-eng-DF-170-181125-9140399");
 		//getByTexualSearch("CIA");
 	}

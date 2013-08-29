@@ -64,6 +64,7 @@ public class EntitySplitter {
 				currentDoc.addField("content", current);
 				server.add(currentDoc);
 			}
+			f.delete();
 			server.commit();
 		}
 	}
