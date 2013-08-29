@@ -23,7 +23,7 @@ import NE.NamedEntity;
 
 public class SentimentEnsemble{
 	
-	private String path = "/afs/cs.pitt.edu/projects/wiebe/opin/database/icwsm2011_04";
+	private String path = "/afs/cs.pitt.edu/usr0/lid29/Desktop/KBP";
 	
 	public ArrayList<SentimentUnit> sentimentList;
 	public ArrayList<SentimentUnit> sentimentListEnsembled;
@@ -67,6 +67,7 @@ public class SentimentEnsemble{
 	
 	public void ensemble() throws SAXException, IOException, ParserConfigurationException{
 		ArrayList<Integer> stored = new ArrayList<Integer>();
+		Hashtable<Integer, Integer> itsLarger = new Hashtable<Integer, Integer>();
 		
 		for(int i=0;i<sentimentList.size();i++){
 			if (stored.contains(i))
@@ -77,10 +78,13 @@ public class SentimentEnsemble{
 			for (int j=i+1;j<sentimentList.size();j++){
 				if (stored.contains(j))
 					continue;
-				System.out.println(stored.toString());
 				
 				SentimentUnit sui = sentimentList.get(i);
+				if (itsLarger.containsKey(i))
+					sui = sentimentList.get(itsLarger.get(i));
 				SentimentUnit suj = sentimentList.get(j);
+				if (itsLarger.containsKey(j))
+					suj = sentimentList.get(itsLarger.get(j));
 				
 				if (!sui.polarity.equals(suj.polarity))
 					continue;
@@ -89,6 +93,7 @@ public class SentimentEnsemble{
 					stored.add(j);
 					
 					if (compareFirstLargerThanSecond(sui,suj)){
+						itsLarger.put(j, i);
 						// should put sui and remove suj
 						if (sentimentListEnsembled.contains(sui) && !sentimentListEnsembled.contains(suj))
 							continue;
@@ -100,6 +105,7 @@ public class SentimentEnsemble{
 							sentimentListEnsembled.set(sentimentListEnsembled.indexOf(suj), sui);
 					} // sui >= suj
 					else{
+						itsLarger.put(i, j);
 						// should put suj and remove sui
 						if (sentimentListEnsembled.contains(suj) && !sentimentListEnsembled.contains(sui))
 							continue;
@@ -115,6 +121,7 @@ public class SentimentEnsemble{
 				else if (sameHT(sui, suj)){
 					stored.add(j);
 					if (compareFirstLargerThanSecond(sui,suj)){
+						itsLarger.put(j, i);
 						// attach suj to sui
 						sui.holderOffsets += ","+suj.holderOffsets;
 						sui.targetOffsets += ","+suj.targetOffsets;
@@ -131,6 +138,7 @@ public class SentimentEnsemble{
 							sentimentListEnsembled.set(sentimentListEnsembled.indexOf(suj), sui);
 					} // sui >= suj
 					else{
+						itsLarger.put(i, j);
 						// attach sui to suj
 						suj.holderOffsets += ","+sui.holderOffsets;
 						suj.targetOffsets += ","+sui.targetOffsets;
@@ -148,15 +156,12 @@ public class SentimentEnsemble{
 					} // sui < suj
 				} // sameHT
 			} // inner loop
-			if (!sentimentListEnsembled.contains(sentimentList.get(i)))
-				sentimentListEnsembled.add(sentimentList.get(i));
-				
 		} //out loop
 		return;
 	}
 	
 	private Boolean compareFirstLargerThanSecond(SentimentUnit su1, SentimentUnit su2){
-		if (!(su1.confidenceScore < su2.confidenceScore)){
+		if (su1.confidenceScore > su2.confidenceScore){
 			return true;
 		}
 		else if (su1.confidenceScore == su2.confidenceScore){
@@ -164,6 +169,7 @@ public class SentimentEnsemble{
 				return true;
 			}
 		}
+		
 		return false;
 	}
 	
@@ -177,10 +183,14 @@ public class SentimentEnsemble{
 				(offsets1[1] < offsets2[1]+fuzzyEqualsLength) && (offsets1[1] > offsets2[1]-fuzzyEqualsLength) )
 			return true;
 		
+		
+		
 		return false;
 	}
 	
 	private Boolean sameExact(SentimentUnit su1, SentimentUnit su2){
+		if (!(su1.polarity.equals(su2.polarity)))
+			return false;
 		if (su1.docID.equals(su2.docID) && 
 				fuzzyEquals(su1.holderOffsets.split(",")[0],su2.holderOffsets.split(",")[0]) &&
 				fuzzyEquals(su1.targetOffsets.split(",")[0],su2.targetOffsets.split(",")[0]) &&
