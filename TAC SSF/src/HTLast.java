@@ -134,7 +134,7 @@ public class HTLast {
 	
 	private void rank(){
 		if (holderCandidatesLength.isEmpty()){
-			holderSpan = "";
+			holderSpan = "NULL";
 		}
 		else{
 		for (String holder: holderCandidatesLength.keySet()){
@@ -157,7 +157,7 @@ public class HTLast {
 		
 		/////////////////////////////////////////////////
 		if (targetCandidatesLength.isEmpty()){
-			targetSpan = "";
+			targetSpan = "NULL";
 		}
 		else{
 		for (String target: targetCandidatesLength.keySet()){
