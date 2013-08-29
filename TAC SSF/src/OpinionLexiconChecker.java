@@ -58,10 +58,6 @@ public class OpinionLexiconChecker {
 			polarity = "negative";
 		}
 		
-		else{
-			results.put("0_"+String.valueOf(line.length()-1), "NULL");
-		}
-		
 		return results;
 	}
 	
