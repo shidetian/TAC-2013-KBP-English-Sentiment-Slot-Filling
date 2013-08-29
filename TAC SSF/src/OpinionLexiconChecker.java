@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class OpinionLexiconChecker {
 	public String sentence;
 	public ArrayList<OpinWord> opList;
-	public HashSet<String> polterms;
+	public ArrayList<String> polterms;
 	public String polarity;
 	
 	
@@ -29,7 +29,7 @@ public class OpinionLexiconChecker {
 		lexicon = new ArrayList<OpinWord>();
 		lexiconHash = new Hashtable<String, Integer>();
 		opList = new ArrayList<OpinWord>();
-		polterms = new HashSet<String>();
+		polterms = new ArrayList<String>();
 		gfbfRead();
 		DSESERead();
 		GIRead();
