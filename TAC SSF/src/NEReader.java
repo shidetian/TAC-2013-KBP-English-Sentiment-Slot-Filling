@@ -51,7 +51,7 @@ public class NEReader {
 			//System.out.println("File: " + filepath);
 		}
 		else
-			filepath = path.concat("/newswires/").concat(docID);
+			filepath = path.concat("/newswire/").concat(docID).concat(".sgm.apf.new");
 		
 		String XMLpath = filepath.concat(".xml");
 		//System.out.println("XML: " + XMLpath);
