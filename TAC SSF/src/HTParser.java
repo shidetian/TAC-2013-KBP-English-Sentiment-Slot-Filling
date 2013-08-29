@@ -32,7 +32,7 @@ public class HTParser {
 	}
 	
 	
-	public String getDependencyStringFromSentence(String sentence){
+	public static String getDependencyStringFromSentence(String sentence){
 		
 		String[] sent = sentence.split(" ");
 		Tree parse = lp.apply(Sentence.toWordList(sent));
@@ -47,7 +47,7 @@ public class HTParser {
 	
 	}
 	
-	public String getDependencyStringFromTree(Tree tree){
+	public static String getDependencyStringFromTree(Tree tree){
 		
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
