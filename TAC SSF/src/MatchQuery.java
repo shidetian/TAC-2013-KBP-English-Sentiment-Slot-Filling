@@ -13,11 +13,13 @@ public class MatchQuery{
 	
 	public MatchQuery(ArrayList<SentimentUnit> suList, Query query){
 		
+		public String path = "/home/carmen/KBP-annotations";
+		
 		for (SentimentUnit su: suList){
 			int[] holderOffsets = {Integer.parseInt(su.holderOffsets.split("-")[0]), Integer.parseInt(su.holderOffsets.split("-")[1])};
 			int[] targetOffsets = {Integer.parseInt(su.targetOffsets.split("-")[0]), Integer.parseInt(su.targetOffsets.split("-")[1])};
 			
-			NEReader NE1 = new NEReader(null);
+			NEReader NE1 = new NEReader(path);
 			NE1.parseNEs(su.docID);
 			List<NamedEntity> holders = NE1.getNEs(holderOffsets[0], holderOffsets[1]);
 			List<NamedEntity> targets = NE1.getNEs(targetOffsets[0], targetOffsets[1]);
