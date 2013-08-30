@@ -20,15 +20,25 @@ public class HTDetection {
 		this.aOffset = aOffset;
 	}
 	
-	public HashMap<String, String> getHT(HashSet<String> OFterms, ArrayList<String> OWterms){
+	public HashMap<String, String> getHT(HashMap<String, String> OFterms, ArrayList<String> OWterms){
 		HashMap<String, String> HT = new HashMap<String, String>();
 		HT.putAll(getHTbasedOF(OFterms));
 		HT.putAll(getHTbasedOW(OWterms));
 		return HT;
 	}
 	
-	public HashMap<String, String> getHTbasedOF(HashSet<String> polterms){
-		return ht_of.process(sent, parser.dependencyString, polterms, NEs, author, aOffset);
+	public HashMap<String, String> getHTbasedOF(HashMap<String, String> polterms){
+		HashSet<String> poltermsTmp = new HashSet<String>();
+		
+		Set<String> keyset = polterms.keySet();
+		Iterator<String> iter = keyset.iterator();
+		while(iter.hasNext()){
+			String offset = iter.next();
+			String[] toks = offset.split("_");
+			poltermsTmp.add(sent.sent.substring(Integer.parseInt(toks[0]), Integer.parseInt(toks[1])));
+		}
+		
+		return ht_of.process(sent, parser.dependencyString, poltermsTmp, NEs, author, aOffset);
 	}
 	
 	public HashMap<String, String> getHTbasedOW(ArrayList<String> polterms){
