@@ -1,7 +1,10 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import opinUnit.SentimentUnit;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 // analyze the sentiment unit, whether it is consistent with the query
 // the particular attribute of query is not determined?
@@ -9,7 +12,7 @@ import opinUnit.SentimentUnit;
 public class MatchQuery{
 	public Response response;
 	
-	public MatchQuery(ArrayList<SentimentUnit> suList, Query query){
+	public MatchQuery(ArrayList<SentimentUnit> suList, Query query) throws SAXException, IOException, ParserConfigurationException{
 		
 		String path = "/home/carmen/KBP-annotations";
 		
