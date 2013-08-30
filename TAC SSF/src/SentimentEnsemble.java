@@ -17,9 +17,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import NE.NEReader;
-import NE.NamedEntity;
-
 
 public class SentimentEnsemble{
 	
