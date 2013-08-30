@@ -25,6 +25,21 @@ public class CompleteSystem {
 			//int i =0;
 				System.out.println(id);
 			}
+			
+			
+			
+			PittSystem pitt = new PittSystem();
+			pitt.run(qb);
+			SentimentEnsemble ensemble = new SentimentEnsemble("pitt_output.txt", "pitt_output.txt");
+			ensemble.ensemble();
+			MatchQuery match = new MatchQuery(ensemble.sentimentListEnsembled);
+			Respone response = match.response;
+			OutputWriter output = new OutputWriter();
+			writer.addResponse(response);
+			output.write("test_pitt.txt", true);
+			
+			
+			
 		}
 	}
 
