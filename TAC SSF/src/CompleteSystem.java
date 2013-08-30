@@ -29,7 +29,7 @@ public class CompleteSystem {
 			
 			
 			PittSystem pitt = new PittSystem();
-			pitt.run(qb);
+			pitt.run(b);
 			SentimentEnsemble ensemble = new SentimentEnsemble("pitt_output.txt", "pitt_output.txt");
 			ensemble.ensemble();
 			MatchQuery match = new MatchQuery(ensemble.sentimentListEnsembled, q);
