@@ -11,12 +11,20 @@ import org.xml.sax.SAXException;
 
 public class MatchQuery{
 	public Response response;
+	public ArrayList<Response> responseList;
 	
 	public MatchQuery(ArrayList<SentimentUnit> suList, Query query) throws SAXException, IOException, ParserConfigurationException{
 		
 		String path = "/home/carmen/KBP-annotations";
 		
 		for (SentimentUnit su: suList){
+			if (query.sent.toString().contains("pos") && su.polarity.contains("neg")){
+				continue;
+			}
+			else if (query.sent.toString().contains("neg") && su.polarity.contains("pos")){
+				continue;
+			}
+			
 			int[] holderOffsets = {Integer.parseInt(su.holderOffsets.split("-")[0]), Integer.parseInt(su.holderOffsets.split("-")[1])};
 			int[] targetOffsets = {Integer.parseInt(su.targetOffsets.split("-")[0]), Integer.parseInt(su.targetOffsets.split("-")[1])};
 			
@@ -57,11 +65,13 @@ public class MatchQuery{
 			// that means 
 			// 1) when the query type is "pos/neg-from", the query is the target and the filler is the holder
 			if (query.sent.toString().contains("from") && targetFlag){
-				response = new Response(query.qId, query.sent, "pitt", "", su.holderSpan, su.holderOffsets, su.targetOffsets, "", su.confidenceScore);
+				response = new Response(query.qId, query.sent, "pitt", su.docID, su.holderSpan, su.holderOffsets, su.targetOffsets, su.sentenceOffsets, su.confidenceScore);
+				responseList.add(response);
 			}
 			// 2) when the query type is "pos/neg-towards", the query is the holder and the filler is the target
 			else if (query.sent.toString().contains("towards") && holderFlag){
-				response = new Response(query.qId, query.sent, "pitt", "", su.targetSpan, su.targetOffsets, su.holderOffsets, "", su.confidenceScore);
+				response = new Response(query.qId, query.sent, "pitt", "0", su.targetSpan, su.targetOffsets, su.holderOffsets, "0-0", su.confidenceScore);
+				responseList.add(response);
 			}
 		}
 		
