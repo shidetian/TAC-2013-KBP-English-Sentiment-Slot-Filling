@@ -89,20 +89,20 @@ public class PittSystem {
 					if(temp.length() <= 1)
 						continue;
 						
-					HashMap<String, String> pol = opinionFinder.runOpinionFinder(sent.sent);
-					pol.putAll(ow.runOpinionWordChecker(sent.sent));
+					HashMap<String, String> poltermsOF = opinionFinder.runOpinionFinder(sent.sent);
+					HashMap<String, String> polterms = new HashMap<String, String>();
+					polterms.putAll(poltermsOF);
+					polterms.putAll(ow.runOpinionWordChecker(sent.sent));
 					
 					HashMap<String, String> polarity = new HashMap<String, String>();
 					String sSpan = Integer.toString(sent.beg).concat("-").concat(Integer.toString(sent.end));
 					
-					HashSet<String> polterms = new HashSet<String>();
-					Set<String> keyset = pol.keySet();
+					Set<String> keyset = polterms.keySet();
 					Iterator<String> iter = keyset.iterator();
 					while(iter.hasNext()){
 						String offset = iter.next();
 						String[] toks = offset.split("_");
-						polterms.add(sent.sent.substring(Integer.parseInt(toks[0]), Integer.parseInt(toks[1])));
-						polarity.put(sent.sent.substring(Integer.parseInt(toks[0]), Integer.parseInt(toks[1])), pol.get(offset));
+						polarity.put(sent.sent.substring(Integer.parseInt(toks[0]), Integer.parseInt(toks[1])), polterms.get(offset));
 					}
 					
 					// Holder&Target Detection
@@ -111,7 +111,7 @@ public class PittSystem {
 					List<NamedEntity> NEs = ner.getNEs(sent.beg, sent.end);
 					
 					HTDetection HTD = new HTDetection(sent, parser, NEs, author, aidx);
-					HashMap<String, String> oht = HTD.getHT(polterms, ow.polterms);
+					HashMap<String, String> oht = HTD.getHT(poltermsOF, ow.polterms);
 						
 					keyset = oht.keySet();
 					iter = keyset.iterator();
