@@ -11,7 +11,7 @@ public class MatchQuery{
 	
 	public MatchQuery(ArrayList<SentimentUnit> suList, Query query){
 		
-		public String path = "/home/carmen/KBP-annotations";
+		String path = "/home/carmen/KBP-annotations";
 		
 		for (SentimentUnit su: suList){
 			int[] holderOffsets = {Integer.parseInt(su.holderOffsets.split("-")[0]), Integer.parseInt(su.holderOffsets.split("-")[1])};
