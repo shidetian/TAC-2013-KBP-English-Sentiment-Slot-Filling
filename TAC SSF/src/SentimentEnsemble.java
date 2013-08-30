@@ -23,7 +23,7 @@ import NE.NamedEntity;
 
 public class SentimentEnsemble{
 	
-	private String path = "/afs/cs.pitt.edu/usr0/lid29/Desktop/KBP";
+	private String path = "/home/carmen/KBP-annotations";
 	
 	public ArrayList<SentimentUnit> sentimentList;
 	public ArrayList<SentimentUnit> sentimentListEnsembled;
