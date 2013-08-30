@@ -1,5 +1,3 @@
-package NE;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,11 +54,11 @@ public class MatchQuery{
 			// that means 
 			// 1) when the query type is "pos/neg-from", the query is the target and the filler is the holder
 			if (query.sent.toString().contains("from") && targetFlag){
-				response = new Response(query.id, su.polarity, su.team, "", su.holderSpan, su.holderOffsets, su.targetOffsets, "", su.confidenceScore);
+				response = new Response(query.id, su.polarity, "pitt", "", su.holderSpan, su.holderOffsets, su.targetOffsets, "", su.confidenceScore);
 			}
 			// 2) when the query type is "pos/neg-towards", the query is the holder and the filler is the target
 			else if (query.sent.toString().contains("towards") && holderFlag){
-				response = new Response(query.id, su.polarity, su.team, "", su.targetSpan, su.targetOffsets, su.holderOffsets, "", su.confidenceScore);
+				response = new Response(query.id, su.polarity, "pitt", "", su.targetSpan, su.targetOffsets, su.holderOffsets, "", su.confidenceScore);
 			}
 		}
 		
