@@ -143,7 +143,14 @@ public class PittSystem {
 
 	}
 	
-	public List<Sentence> processDocument(String doc, ProcessedDocument pDoc){	
+	public List<Sentence> processDocument(String doc, ProcessedDocument pDoc){
+		//System.out.println("length of offset: " + pDoc.offsets.length());
+		//System.out.println("offset: " + pDoc.offsets);
+		List<Sentence> sents = new ArrayList<Sentence>();
+		
+		if(pDoc == null)
+			return sents;
+		
 		List<String> offsets = new ArrayList<String>();
 		String[] offtoks = pDoc.offsets.split("\n");
 		boolean start = false;
@@ -177,16 +184,11 @@ public class PittSystem {
 		
 		String[] tokens = pDoc.tokens.split("\n");
 		
-		List<Sentence> sents = new ArrayList<Sentence>();
-		
 		for(int i=0; i<offsets.size(); i++){
 			String off = offsets.get(i);
 			String[] temp = off.split("-");
 			Sentence sent = new Sentence(tokens[i], Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), pDoc.trees.get(i));
 			sents.add(sent);
-			/*System.out.println(off + " : " + tokens[i]);
-			System.out.println("     : " + doc.substring(Integer.parseInt(temp[0]), Integer.parseInt(temp[1])));
-			System.out.println(pDoc.trees.get(i).toString());*/
 		}
 		
 		return sents;
