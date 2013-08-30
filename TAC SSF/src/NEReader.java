@@ -83,17 +83,13 @@ public class NEReader {
 			NodeList resolutions = entity.getElementsByTagName("entity_resolution");
 			//System.out.println("Resolution: " + resolutions.getLength());
 			
-			if(mentions.getLength() != resolutions.getLength()){
-				System.out.println("File Error");
-				return;
-			}
 			
 			for(int j=0; j<mentions.getLength(); j++){
 				Element mention = (Element) mentions.item(j);
 				NodeList extents = mention.getElementsByTagName("extent");
 				HashMap<String, Double> ERs = new HashMap<String, Double>();
 				
-				Element entity_resolution = (Element) resolutions.item(j);
+				Element entity_resolution = (Element) resolutions.item(0);
 				NodeList resolutionList = entity_resolution.getElementsByTagName("resolution");
 				//System.out.println("# Resolution: " + resolutionList.getLength());
 				
