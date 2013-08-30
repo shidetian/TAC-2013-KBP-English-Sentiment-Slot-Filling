@@ -14,7 +14,7 @@ public class HTParser {
 	
 	static LexicalizedParser lp;
 	
-	public String dependencyString;
+	static public String dependencyString;
 	public ArrayList<dependencyTriple> dependencyTripleList;
 	
 	public HTParser(){
