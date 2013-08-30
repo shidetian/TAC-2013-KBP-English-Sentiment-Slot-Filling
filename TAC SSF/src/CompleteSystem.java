@@ -33,9 +33,9 @@ public class CompleteSystem {
 			SentimentEnsemble ensemble = new SentimentEnsemble("pitt_output.txt", "pitt_output.txt");
 			ensemble.ensemble();
 			MatchQuery match = new MatchQuery(ensemble.sentimentListEnsembled, q);
-			Respone response = match.response;
+			Response response = match.response;
 			OutputWriter output = new OutputWriter();
-			writer.addResponse(response);
+			output.addResponse(response);
 			output.write("test_pitt.txt", true);
 			
 			
