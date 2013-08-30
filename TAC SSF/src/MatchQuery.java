@@ -16,6 +16,7 @@ public class MatchQuery{
 	public MatchQuery(ArrayList<SentimentUnit> suList, Query query) throws SAXException, IOException, ParserConfigurationException{
 		
 		String path = "/home/carmen/KBP-annotations";
+		responseList = new ArrayList<Response>();
 		
 		for (SentimentUnit su: suList){
 			if (query.sent.toString().contains("pos") && su.polarity.contains("neg")){
