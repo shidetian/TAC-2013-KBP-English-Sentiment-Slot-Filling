@@ -32,7 +32,7 @@ public class CompleteSystem {
 			pitt.run(qb);
 			SentimentEnsemble ensemble = new SentimentEnsemble("pitt_output.txt", "pitt_output.txt");
 			ensemble.ensemble();
-			MatchQuery match = new MatchQuery(ensemble.sentimentListEnsembled);
+			MatchQuery match = new MatchQuery(ensemble.sentimentListEnsembled, q);
 			Respone response = match.response;
 			OutputWriter output = new OutputWriter();
 			writer.addResponse(response);
