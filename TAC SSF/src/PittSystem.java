@@ -22,7 +22,7 @@ public class PittSystem {
 			parser = new HTParser();
 			of = new OpinionFinder();	
 			ow = new OpinionLexiconChecker();
-			ner = new NEReader("/home/carmen/KBP-annotations");
+			ner = new NEReader();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
