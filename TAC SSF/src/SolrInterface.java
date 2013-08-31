@@ -8,12 +8,13 @@ import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.ModifiableSolrParams;
 
 import edu.stanford.nlp.trees.Tree;
 
 public class SolrInterface {
 	static HttpSolrServer server = new HttpSolrServer("http://54.221.246.163:8983/solr/");
-	
+	static HttpSolrServer server2 = new HttpSolrServer("http://54.221.246.163:8984/solr/"); //for annotations
 	public static String getOriginalId(String id){
 		if (id.contains(".")){
 			if (id.charAt(id.indexOf('.')+1)=='0' || (id.substring(id.indexOf('.')+1).length()==4 && id.charAt(id.indexOf('.')+1)!='p')){
@@ -40,6 +41,21 @@ public class SolrInterface {
 			return results.size()==0?null:(String) results.get(0).getFieldValue("whole_text");
 		}else{
 			return (String) results.get(0).getFieldValue("whole_text");
+		}
+	}
+	
+	public static String getRawAnnotation(String id) throws SolrServerException{
+		SolrQuery query = new SolrQuery();
+		query.setQuery("id:"+id);
+		query.setStart(0);
+		query.setFields("content");
+		
+		QueryResponse response = server2.query(query);
+		SolrDocumentList results = response.getResults();
+		if (results.size()==0){
+			return null;
+		}else{
+			return (String) ((ArrayList) results.get(0).getFieldValue("content")).get(0);
 		}
 	}
 	
@@ -121,11 +137,13 @@ public class SolrInterface {
 	    return ids;
 	}
 	
-	/*public static ArrayList<String> getByMentionsSearch(String s) throws SolrServerException{
+	//Returns a list of ids from the Annotated system
+	public static ArrayList<String> getByMentionsSearch(String s) throws SolrServerException{
 		SolrQuery query = new SolrQuery();
-		query.setQuery("mentions:"+s);
+		query.setQuery("text:"+s);
 		query.setStart(0);
 		query.setFields("id");
+		query.setRows(1000);
 		
 		QueryResponse response = server.query(query);
 		SolrDocumentList results = response.getResults();
@@ -133,12 +151,14 @@ public class SolrInterface {
 	    for (int i = 0; i < results.size(); ++i) {
 	    	ids.add((String) results.get(i).getFieldValue("id"));
 	    }
-	    return null;
-	}*/
+	    return ids;
+	}
 	
 	public static void main(String[] args) throws SolrServerException, ClassNotFoundException, IOException{
-		String s = (getRawDocument("APW_ENG_20090623.1102"));
-		Object temp = getProcessedDocument("bolt-eng-DF-170-181125-9140399");
+		String s = (getRawAnnotation("AFP_ENG_20090828.0035"));
+		//Object temp = getProcessedDocument("bolt-eng-DF-170-181125-9140399");
+		//getByMentionsSearch("CIA");
 		//getByTexualSearch("CIA");
+		System.out.println(s);
 	}
 }
