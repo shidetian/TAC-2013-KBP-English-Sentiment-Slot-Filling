@@ -36,6 +36,11 @@ public class PittSystem {
 			
 			for(String docid : qb.docIds){
 				//System.out.println("ID: " + docid);
+				if(!ner.getNEAnnotations(docid)){
+					System.out.println("Don't have NE Annotation file!");
+					continue;
+				}
+				
 				String doc = SolrInterface.getRawDocument(docid);
 				//System.out.println(doc);
 				List<Sentence> allSents = processDocument(doc, SolrInterface.getProcessedDocument(docid));
@@ -75,9 +80,6 @@ public class PittSystem {
 					author = text.substring(sidx, eidx);
 					aidx = Integer.toString(sidx+begIndex).concat("-").concat(Integer.toString(eidx+begIndex));
 				}
-				
-				ner.parseNEs(docid);
-				
 				
 				for(Sentence sent : allSents){
 					if((sent.end < begIndex) || (sent.beg > endIndex))
