@@ -17,10 +17,10 @@ public class OpinionLexiconChecker {
 	public String polarity;
 	
 	
-	private String gfLexiconFileName = "goodFor_manual.csv";
-	private String bfLexiconFileName = "badFor_manual.csv";
-	private String DSESELexiconFileName = "subjclueslen1-CL06sub.tff";
-	private String GILexiconFileName = "GeneralInquiry.csv";
+	private String gfLexiconFileName = "opinionLexiconCheckerResource/goodFor_manual.csv";
+	private String bfLexiconFileName = "opinionLexiconCheckerResource/badFor_manual.csv";
+	private String DSESELexiconFileName = "opinionLexiconCheckerResource/subjclueslen1-CL06sub.tff";
+	private String GILexiconFileName = "opinionLexiconCheckerResource/GeneralInquiry.csv";
 	private ArrayList<OpinWord> lexicon;
 	private Hashtable<String, Integer> lexiconHash;
 	
