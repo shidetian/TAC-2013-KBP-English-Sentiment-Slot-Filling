@@ -68,12 +68,12 @@ public class SolrInterface {
 		
 		QueryResponse response = server.query(query);
 		SolrDocumentList results = response.getResults();
-	    /*if (results.size()>0 && results.get(0).getFieldValue("offsets")!=null) {
+	    if (results.size()>0 && results.get(0).getFieldValue("offsets")!=null) {
 	    	return new ProcessedDocument((String) results.get(0).getFieldValue("offsets"),
 	    						(String) results.get(0).getFieldValue("tokens"),
 	    						(ArrayList<Tree>) Preprocessor.fromBase64(((byte[]) results.get(0).getFieldValue("tree")))
 	    	);
-	    }else{*/
+	    }else{
 	    	String rawText = SolrInterface.getRawDocument(getOriginalId(id));
 	    	if (rawText==null){
 	    		return null;
@@ -101,7 +101,7 @@ public class SolrInterface {
 			server.add(doc, 10000); //commit within 10 seconds
 			
 	    	return new ProcessedDocument(offsets,tokens, trees);
-	    //}
+	    }
 	}
 	
 	public static ArrayList<String> getByTexualSearch(String s) throws SolrServerException{
