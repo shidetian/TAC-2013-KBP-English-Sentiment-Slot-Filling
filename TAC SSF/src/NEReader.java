@@ -53,7 +53,7 @@ public class NEReader {
 		anno = anno.replaceAll(">E0", "\">E0");
 		
 		//System.out.println(anno);
-		ByteArrayInputStream stream = new ByteArrayInputStream(anno.getBytes());
+		ByteArrayInputStream stream = new ByteArrayInputStream(anno.getBytes("UTF-8"));
 		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stream);
 		doc.normalizeDocument();
 		
