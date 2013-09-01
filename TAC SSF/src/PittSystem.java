@@ -32,15 +32,32 @@ public class PittSystem {
 	
 	public void run(QueryBundle qb){
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter("output/pitt_output222.txt"));
+			BufferedWriter bw = new BufferedWriter(new FileWriter("output/pitt_SQ3DAnswer.txt"));
+			
+			String[] sampleAnnotationDocIds = new String[5];
+			sampleAnnotationDocIds[0] = "bolt-eng-DF-170-181109-8867106";
+			sampleAnnotationDocIds[1] = "bolt-eng-DF-199-192783-6837220";
+			sampleAnnotationDocIds[2] = "bolt-eng-DF-199-192783-6862389";
+			sampleAnnotationDocIds[3] = "bolt-eng-DF-199-192958-5884891";
+			sampleAnnotationDocIds[4] = "bolt-eng-DF-199-192958-5885304";
 			
 			for(String docid : qb.docIds){
+			//for(String docid : sampleAnnotationDocIds){
 				
-				if (qb.docIds.indexOf(docid) > 100){
-					break;
+				//if (qb.docIds.indexOf(docid) > 50){
+				//	break;
+				//}
+				
+				Boolean flag = false;
+				for (String tmpId : sampleAnnotationDocIds){
+					if (docid.contains(tmpId)){
+						flag = true;
+					}
 				}
+				if (!flag)
+					continue;
 				
-				System.out.println("****"+Integer.toString(qb.docIds.indexOf(docid))+"****** ID: " + docid);
+				System.out.println("****"+Integer.toString(qb.docIds.indexOf(docid))+"***"+"/"+Integer.toString(qb.docIds.size())+"*** ID: " + docid);
 				String doc = SolrInterface.getRawDocument(docid);
 				//System.out.println(doc);
 				List<Sentence> allSents = processDocument(doc, SolrInterface.getProcessedDocument(docid));
@@ -116,6 +133,7 @@ public class PittSystem {
 					String dep = HTParser.getDependencyStringFromTree(sent.tree);
 					//System.out.println(dep);
 					List<NamedEntity> NEs = ner.getNEs(sent.beg, sent.end);
+					System.out.println(Integer.toString(sent.beg)+"-"+Integer.toString(sent.end)+"  "+sent.sent);
 					System.out.println("entities: "+Integer.toString(NEs.size()));
 					
 					HTDetection HTD = new HTDetection(sent, parser, NEs, author, aidx);
