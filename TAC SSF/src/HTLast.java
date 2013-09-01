@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class HTLast {
 	public String sentence;
@@ -59,6 +60,7 @@ public class HTLast {
 		extractHT();
 		rank();
 
+		Set<String> setholders = holderCandidatesLength.keySet();
 		opinionOffsets = Integer.toString(sentencenBegin) + "-" + Integer.toString(sentenceEnd);
 		holderOffsets = Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(holderSpan)+sentencenBegin+holderSpan.length());
 		targetOffsets = Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin)+"-"+Integer.toString(sentence.indexOf(targetSpan)+sentencenBegin+targetSpan.length());
@@ -121,12 +123,12 @@ public class HTLast {
 	}
 	
 	private Boolean traceJudgeTarget(String trace){
-		if (!trace.contains("obj"))
+		if (!(trace.contains("obj")) && !(trace.contains("amod")))
 			return false;
 		
 		String[] relations = trace.split("-");
 		String lastRelation = relations[relations.length-1];
-		if (lastRelation.contains("nn") || lastRelation.contains("subjpass") || lastRelation.contains("obj") ){
+		if (lastRelation.contains("nn") || lastRelation.contains("subjpass") || lastRelation.contains("obj") || lastRelation.contains("amod") || lastRelation.contains("poss") ){
 			return true;
 		}
 		return false;
