@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class HTDetection {
-	static HTLast ht_ow;
+	static HTLastOzan ht_ow;
 	static HTOpinionFinder ht_of;
 	public Sentence sent;
 	public HTParser parser;
@@ -10,7 +10,7 @@ public class HTDetection {
 	public String aOffset;
 	
 	public HTDetection(Sentence sent, HTParser parser, List<NamedEntity> NEs, String author, String aOffset){
-		ht_ow = new HTLast();
+		ht_ow = new HTLastOzan();
 		ht_of = new HTOpinionFinder();
 		
 		this.sent = sent;
@@ -22,8 +22,32 @@ public class HTDetection {
 	
 	public HashMap<String, String> getHT(HashMap<String, String> OFterms, ArrayList<String> OWterms){
 		HashMap<String, String> HT = new HashMap<String, String>();
-		HT.putAll(getHTbasedOF(OFterms));
-		HT.putAll(getHTbasedOW(OWterms));
+		HashMap<String, String> results = new HashMap<String, String>();
+		
+		if (!OFterms.isEmpty()){
+			results = getHTbasedOF(OFterms);
+			if (!results.isEmpty())
+				HT.putAll(results);
+		}
+		
+		if (!OWterms.isEmpty()){
+			results = getHTbasedOW(OWterms);
+			if (!results.isEmpty())
+				HT.putAll(getHTbasedOW(OWterms));
+		}
+		
+		ArrayList<String> tmp = new ArrayList<String>();
+		Set<String> tmpset = OFterms.keySet();
+		Iterator<String> iter = tmpset.iterator();
+		while (iter.hasNext()){
+			tmp.add(OFterms.get(iter.next()));
+		}
+		if (!tmp.isEmpty()){
+			results = getHTbasedOW(tmp);
+			if (!results.isEmpty())
+				HT.putAll(results);
+		}
+		
 		return HT;
 	}
 	
@@ -56,4 +80,3 @@ public class HTDetection {
 	}
 
 }
-
