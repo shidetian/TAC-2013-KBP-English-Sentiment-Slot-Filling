@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.xml.sax.SAXException;
 
 
@@ -33,6 +34,8 @@ public class SentimentEnsemble{
 		
 		addSentimentFile(cornellFile);
 		addSentimentFile(pittFile);
+		
+		System.out.println("read from files...:"+Integer.toString(this.sentimentList.size()));
 	}
 	
 	public SentimentEnsemble() throws IOException{
@@ -47,30 +50,34 @@ public class SentimentEnsemble{
 	public void addSentimentFile(String filename) throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
 		String line;
-            	while ((line=br.readLine())!= null){
-            		String[] a = line.split("\t");
-            		if (a[9].toLowerCase().equals("positive") || a[9].toLowerCase().equals("pos"))
-            			a[9] = "pos";
-            		else if (a[9].toLowerCase().equals("negative") || a[9].toLowerCase().equals("neg"))
-            			a[9] = "neg";
-            		else
-            			continue;
-            		
-            		this.sentimentList.add(new SentimentUnit(a[0],a[1],a[2],a[3],a[4],a[5],
-            				a[6], a[7], a[8], a[9], Double.parseDouble(a[10])));
-            	}
-            	br.close();
+    	while ((line=br.readLine())!= null){
+    		String[] a = line.split("\t");
+    		
+    		if (a[9].toLowerCase().equals("positive") || a[9].toLowerCase().equals("pos"))
+    			a[9] = "pos";
+    		else if (a[9].toLowerCase().equals("negative") || a[9].toLowerCase().equals("neg"))
+    			a[9] = "neg";
+    		else
+    			continue;
+    		
+    		this.sentimentList.add(new SentimentUnit(a[0],a[1],a[2],a[3],a[4],a[5],
+    				a[6], a[7], a[8], a[9], Double.parseDouble(a[10])));
+    	}
+    	br.close();
 	}
 	
-	public void ensemble() throws SAXException, IOException, ParserConfigurationException{
+	public void ensemble() throws SAXException, IOException, ParserConfigurationException, SolrServerException{
 		ArrayList<Integer> stored = new ArrayList<Integer>();
 		Hashtable<Integer, Integer> itsLarger = new Hashtable<Integer, Integer>();
 		
 		for(int i=0;i<sentimentList.size();i++){
 			if (stored.contains(i))
 				continue;
-			else
+			else{
+				sentimentListEnsembled.add(sentimentList.get(i));
 				stored.add(i);
+			}
+				
 			
 			for (int j=i+1;j<sentimentList.size();j++){
 				if (stored.contains(j))
@@ -197,7 +204,7 @@ public class SentimentEnsemble{
 		return false;
 	}
 	
-	private Boolean sameHT(SentimentUnit su1, SentimentUnit su2) throws SAXException, IOException, ParserConfigurationException{
+	private Boolean sameHT(SentimentUnit su1, SentimentUnit su2) throws SAXException, IOException, ParserConfigurationException, SolrServerException{
 		
 		// how to introduce the knowledge base and coreference chain together...?
 		Boolean holderFlag = false;
@@ -208,13 +215,13 @@ public class SentimentEnsemble{
 		int[] targetOffsets1 = {Integer.parseInt(su1.targetOffsets.split(",")[0].split("-")[0]), Integer.parseInt(su1.targetOffsets.split(",")[0].split("-")[1])};
 		int[] targetOffsets2 = {Integer.parseInt(su2.targetOffsets.split(",")[0].split("-")[0]), Integer.parseInt(su2.targetOffsets.split(",")[0].split("-")[1])};
 		
-		NEReader NE1 = new NEReader(path);
-		NE1.parseNEs(su1.docID);
+		NEReader NE1 = new NEReader();
+		NE1.getNEAnnotations(su1.docID);
 		List<NamedEntity> holder1 = NE1.getNEs(holderOffsets1[0], holderOffsets1[1]);
 		List<NamedEntity> target1 = NE1.getNEs(targetOffsets1[0], targetOffsets1[1]);
 		
-		NEReader NE2 = new NEReader(path);
-		NE2.parseNEs(su2.docID);
+		NEReader NE2 = new NEReader();
+		NE2.getNEAnnotations(su2.docID);
 		List<NamedEntity> holder2 = NE2.getNEs(holderOffsets2[0], holderOffsets2[1]);
 		List<NamedEntity> target2 = NE2.getNEs(targetOffsets2[0], targetOffsets2[1]);
 		
