@@ -50,8 +50,14 @@ public class SentimentEnsemble{
 	public void addSentimentFile(String filename) throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
 		String line;
+		
     	while ((line=br.readLine())!= null){
     		String[] a = line.split("\t");
+    		
+    		if (a.length != 11){
+    			
+    			continue;
+    		}
     		
     		if (a[9].toLowerCase().equals("positive") || a[9].toLowerCase().equals("pos"))
     			a[9] = "pos";
@@ -205,6 +211,8 @@ public class SentimentEnsemble{
 	}
 	
 	private Boolean sameHT(SentimentUnit su1, SentimentUnit su2) throws SAXException, IOException, ParserConfigurationException, SolrServerException{
+		if (!(su1.polarity.equals(su2.polarity)))
+			return false;
 		
 		// how to introduce the knowledge base and coreference chain together...?
 		Boolean holderFlag = false;
@@ -216,12 +224,12 @@ public class SentimentEnsemble{
 		int[] targetOffsets2 = {Integer.parseInt(su2.targetOffsets.split(",")[0].split("-")[0]), Integer.parseInt(su2.targetOffsets.split(",")[0].split("-")[1])};
 		
 		NEReader NE1 = new NEReader();
-		NE1.getNEAnnotations(su1.docID);
+		NE1.getNEAnnotations(su1.docID.split(".p")[0]);
 		List<NamedEntity> holder1 = NE1.getNEs(holderOffsets1[0], holderOffsets1[1]);
 		List<NamedEntity> target1 = NE1.getNEs(targetOffsets1[0], targetOffsets1[1]);
 		
 		NEReader NE2 = new NEReader();
-		NE2.getNEAnnotations(su2.docID);
+		NE2.getNEAnnotations(su2.docID.split(".p")[0]);
 		List<NamedEntity> holder2 = NE2.getNEs(holderOffsets2[0], holderOffsets2[1]);
 		List<NamedEntity> target2 = NE2.getNEs(targetOffsets2[0], targetOffsets2[1]);
 		
