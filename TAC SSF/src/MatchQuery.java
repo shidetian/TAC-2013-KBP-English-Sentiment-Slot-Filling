@@ -35,7 +35,7 @@ public class MatchQuery{
 			
 			NEReader NE1 = new NEReader();
 			//NE1.parseNEs(su.docID);
-			NE1.getNEAnnotations(su.docID);
+			NE1.getNEAnnotations(su.docID.split(".p")[0]);
 			List<NamedEntity> holders = NE1.getNEs(holderOffsets[0], holderOffsets[1]);
 			List<NamedEntity> targets = NE1.getNEs(targetOffsets[0], targetOffsets[1]);
 			
