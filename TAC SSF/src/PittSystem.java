@@ -32,15 +32,15 @@ public class PittSystem {
 	
 	public void run(QueryBundle qb){
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter("pitt_output.txt"));
+			BufferedWriter bw = new BufferedWriter(new FileWriter("output/pitt_output222.txt"));
 			
 			for(String docid : qb.docIds){
-				//System.out.println("ID: " + docid);
-				if(!ner.getNEAnnotations(docid)){
-					System.out.println("Don't have NE Annotation file!");
-					continue;
+				
+				if (qb.docIds.indexOf(docid) > 100){
+					break;
 				}
 				
+				System.out.println("****"+Integer.toString(qb.docIds.indexOf(docid))+"****** ID: " + docid);
 				String doc = SolrInterface.getRawDocument(docid);
 				//System.out.println(doc);
 				List<Sentence> allSents = processDocument(doc, SolrInterface.getProcessedDocument(docid));
@@ -68,7 +68,7 @@ public class PittSystem {
 					endIndex = doc.length();
 				}
 				
-				//System.out.println(docid + " : " + begIndex + "\n" + text);
+				//System.out.println(docid + " : " + begIndex + "\n" + text);));
 				
 				String author = "";
 				String aidx = "";
@@ -80,6 +80,9 @@ public class PittSystem {
 					author = text.substring(sidx, eidx);
 					aidx = Integer.toString(sidx+begIndex).concat("-").concat(Integer.toString(eidx+begIndex));
 				}
+				
+				//ner.parseNEs(docid);
+				ner.getNEAnnotations(docid);
 				
 				for(Sentence sent : allSents){
 					if((sent.end < begIndex) || (sent.beg > endIndex))
@@ -94,7 +97,9 @@ public class PittSystem {
 					HashMap<String, String> poltermsOF = opinionFinder.runOpinionFinder(sent.sent);
 					HashMap<String, String> polterms = new HashMap<String, String>();
 					polterms.putAll(poltermsOF);
-					polterms.putAll(ow.runOpinionWordChecker(sent.sent));
+					if (!(ow.runOpinionWordChecker(sent.sent) == null)){
+						polterms.putAll(ow.runOpinionWordChecker(sent.sent));
+					}
 					
 					HashMap<String, String> polarity = new HashMap<String, String>();
 					String sSpan = Integer.toString(sent.beg).concat("-").concat(Integer.toString(sent.end));
@@ -111,17 +116,23 @@ public class PittSystem {
 					String dep = HTParser.getDependencyStringFromTree(sent.tree);
 					//System.out.println(dep);
 					List<NamedEntity> NEs = ner.getNEs(sent.beg, sent.end);
+					System.out.println("entities: "+Integer.toString(NEs.size()));
 					
 					HTDetection HTD = new HTDetection(sent, parser, NEs, author, aidx);
 					HashMap<String, String> oht = HTD.getHT(poltermsOF, ow.polterms);
 						
 					keyset = oht.keySet();
 					iter = keyset.iterator();
+					System.out.println("how many candidates:"+keyset.size());
 					while(iter.hasNext()){
 						String opin = iter.next();
-						//System.out.println("Extracted: " + opin);
+						String span = oht.get(opin);
 						String p = polarity.get(opin);
-						bw.write(docid + "\t" + sent.sent + "\t" + sSpan + "\t" + oht.get(opin) + "\t" + p + "\t" + "1.0\n");
+						if (!(p == null) && !(span.contains("NULL"))){
+							bw.write(docid + "\t" + sent.sent + "\t" + sSpan + "\t" + span + "\t" + p + "\t" + "1.0\n");
+							System.out.println("...........SUCCESS.........");
+							System.out.println("......"+span+"..........");
+						}
 					}
 				}
 			}
