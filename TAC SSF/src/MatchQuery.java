@@ -45,7 +45,7 @@ public class MatchQuery{
 			// holder
 			for (NamedEntity holder: holders){
 				if (query.nodeId.charAt(0)=='E'){
-					System.out.println(holder.resolutions.keySet().toString());
+					//System.out.println(holder.resolutions.keySet().toString());
 					if (holder.resolutions.containsKey(query.nodeId))
 						holderFlag = true;
 				} // if in KB
@@ -58,7 +58,7 @@ public class MatchQuery{
 			// target
 			for (NamedEntity target: targets){
 				if (query.nodeId.charAt(0)=='E'){
-					System.out.println(target.resolutions.keySet().toString());
+					//System.out.println(target.resolutions.keySet().toString());
 					if (target.resolutions.containsKey(query.nodeId))
 						targetFlag = true;
 				} // if in KB
