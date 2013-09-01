@@ -99,7 +99,7 @@ public class PittSystem {
 				}
 				
 				//ner.parseNEs(docid);
-				ner.getNEAnnotations(docid);
+				ner.getNEAnnotations(docid.split(".p")[0]);
 				
 				for(Sentence sent : allSents){
 					if((sent.end < begIndex) || (sent.beg > endIndex))
