@@ -39,6 +39,9 @@ public class OpinionLexiconChecker {
 		HashMap<String, String> results = new HashMap<String, String>();
 		sentence = line;
 		ArrayList<OpinWord> opList = lookUp(sentence);
+		if (opList.isEmpty())
+			return null;
+		
 		int positiveNum = 0;
 		int negativeNum = 0;
 		for (OpinWord ow:opList){
@@ -57,6 +60,8 @@ public class OpinionLexiconChecker {
 			results.put("0_"+String.valueOf(line.length()-1), "negative");
 			polarity = "negative";
 		}
+		else
+			return null;
 		
 		return results;
 	}
