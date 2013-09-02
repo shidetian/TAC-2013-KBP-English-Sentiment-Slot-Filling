@@ -41,15 +41,6 @@ public class PittSystem {
 				//	break;
 				//}
 				
-				/*Boolean flag = false;
-				for (String tmpId : sampleAnnotationDocIds){
-					if (docid.contains(tmpId)){
-						flag = true;
-					}
-				}
-				if (!flag)
-					continue;*/
-				
 				System.out.println("****"+Integer.toString(qb.docIds.indexOf(docid))+"***"+"/"+Integer.toString(qb.docIds.size())+"*** ID: " + docid);
 				
 				String doc = SolrInterface.getRawDocument(docid);
