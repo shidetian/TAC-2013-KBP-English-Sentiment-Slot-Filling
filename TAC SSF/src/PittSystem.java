@@ -30,16 +30,9 @@ public class PittSystem {
 	}
 	
 	
-	public void run(QueryBundle qb){
+	public void run(QueryBundle qb, int queryNum){
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter("output/pitt_SQ3DAnswer.txt"));
-			
-			String[] sampleAnnotationDocIds = new String[5];
-			sampleAnnotationDocIds[0] = "bolt-eng-DF-170-181109-8867106";
-			sampleAnnotationDocIds[1] = "bolt-eng-DF-199-192783-6837220";
-			sampleAnnotationDocIds[2] = "bolt-eng-DF-199-192783-6862389";
-			sampleAnnotationDocIds[3] = "bolt-eng-DF-199-192958-5884891";
-			sampleAnnotationDocIds[4] = "bolt-eng-DF-199-192958-5885304";
+			BufferedWriter bw = new BufferedWriter(new FileWriter("output/pitt_evaluation.txt"+Integer.toString(queryNum)));
 			
 			for(String docid : qb.docIds){
 			//for(String docid : sampleAnnotationDocIds){
@@ -48,18 +41,21 @@ public class PittSystem {
 				//	break;
 				//}
 				
-				Boolean flag = false;
+				/*Boolean flag = false;
 				for (String tmpId : sampleAnnotationDocIds){
 					if (docid.contains(tmpId)){
 						flag = true;
 					}
 				}
 				if (!flag)
-					continue;
+					continue;*/
 				
 				System.out.println("****"+Integer.toString(qb.docIds.indexOf(docid))+"***"+"/"+Integer.toString(qb.docIds.size())+"*** ID: " + docid);
+				
 				String doc = SolrInterface.getRawDocument(docid);
 				//System.out.println(doc);
+				if (doc == null || doc == "" || docid == "eng-NG-31-127450-9226403.0")
+					continue;
 				List<Sentence> allSents = processDocument(doc, SolrInterface.getProcessedDocument(docid));
 				
 				String text = "";
@@ -82,6 +78,8 @@ public class PittSystem {
 				}
 				else{
 					text = doc;
+					System.out.println("~~~~~~~~~~");
+					System.out.println(doc);
 					endIndex = doc.length();
 				}
 				
