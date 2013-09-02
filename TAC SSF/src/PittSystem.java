@@ -43,10 +43,15 @@ public class PittSystem {
 				
 				System.out.println("****"+Integer.toString(qb.docIds.indexOf(docid))+"***"+"/"+Integer.toString(qb.docIds.size())+"*** ID: " + docid);
 				
+				if(docid.startsWith("eng-NG")){
+					String[] toks = docid.split(".");
+					docid = toks[0];
+				}
+				
 				String doc = SolrInterface.getRawDocument(docid);
 				//System.out.println(doc);
-				if (doc == null || doc == "" || docid == "eng-NG-31-127450-9226403.0")
-					continue;
+				//if (doc == null || doc == "" || docid == "eng-NG-31-127450-9226403.0")
+				//	continue;
 				List<Sentence> allSents = processDocument(doc, SolrInterface.getProcessedDocument(docid));
 				
 				String text = "";
