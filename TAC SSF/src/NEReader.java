@@ -23,7 +23,7 @@ public class NEReader {
 		this.NEset = new HashMap<Integer, NamedEntity>();
 	}
 	
-	public static NamedEntity getInformativeNE(int beg, int end, String entityid){
+	public static NamedEntity getInformativeNE(String entityid){
 		int max = -1;
 		NamedEntity informative = null;
 		
