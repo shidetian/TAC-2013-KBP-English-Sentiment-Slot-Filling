@@ -65,6 +65,7 @@ public class NEReader {
 		for(int i=0; i<entities.getLength(); i++){
 			Element entity = (Element) entities.item(i);
 			String entityid = entity.getAttribute("ID");
+			String type = entity.getAttribute("TYPE");
 			//System.out.println(entityid);
 			NodeList mentions = entity.getElementsByTagName("entity_mention");
 			//System.out.println("mention: " + mentions.getLength());
@@ -92,7 +93,7 @@ public class NEReader {
 					int end = Integer.parseInt(info.getAttribute("END"));
 					String ne = info.getTextContent();
 					//System.out.println(ne + " , " + beg + " , " + end);
-					NEset.put(beg, new NamedEntity(entityid, ne, beg, end, ERs));
+					NEset.put(beg, new NamedEntity(entityid, ne, type, beg, end, ERs));
 				}
 			}
 		}
