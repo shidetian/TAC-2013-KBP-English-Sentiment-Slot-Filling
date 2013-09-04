@@ -23,9 +23,9 @@ public class NEReader {
 		this.NEset = new HashMap<Integer, NamedEntity>();
 	}
 	
-	public static NamedEntity getReleventNE(int beg, int end, String entityid){
+	public static NamedEntity getInformativeNE(int beg, int end, String entityid){
 		int max = -1;
-		NamedEntity relevant = null;
+		NamedEntity informative = null;
 		
 		Set<Integer> keyset = NEset.keySet();
 		Iterator<Integer> iter = keyset.iterator();
@@ -36,13 +36,13 @@ public class NEReader {
 			if(temp.entityid.compareTo(entityid) != 0)
 				continue;
 			
-			if((idx < beg) && (idx > max)){
-				max = idx;
-				relevant = temp;
+			if(temp.entity.length() > max){
+				max = temp.entity.length();
+				informative = temp;
 			}
 		}
 		
-		return relevant;
+		return informative;
 	}
 	
 	public static List<NamedEntity> getNEs(int beg, int end){
