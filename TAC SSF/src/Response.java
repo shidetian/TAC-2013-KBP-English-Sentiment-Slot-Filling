@@ -15,10 +15,10 @@ public class Response implements Comparable<Response>{
 		if (!(validateOffset(feo)&&validateOffset(qeo)&&validateOffset(jo))){
 			System.err.println("One or more of the offsets are malformed");
 		}
-		qId = SolrInterface.getOriginalId(qid);
+		qId = qid;
 		sent = s;
 		teamId = tid;
-		justId = jid;
+		justId = SolrInterface.getOriginalId(jid);
 		entity = e;
 		fillerEntityOffsets = feo;
 		queryEntityOffsets = qeo;
