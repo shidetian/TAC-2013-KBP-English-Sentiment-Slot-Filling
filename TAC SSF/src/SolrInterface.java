@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -155,10 +156,19 @@ public class SolrInterface {
 	}
 	
 	public static void main(String[] args) throws SolrServerException, ClassNotFoundException, IOException{
-		String s = (getRawAnnotation("AFP_ENG_20090828.0035"));
+		System.out.println("Default Charset=" + Charset.defaultCharset());
+    	//System.setProperty("file.encoding", "Latin-1");
+    	System.out.println("file.encoding=" + System.getProperty("file.encoding"));
+    	System.out.println("Default Charset=" + Charset.defaultCharset());
+    	//System.out.println("Default Charset in Use=" + getDefaultCharSet());
+		
+		String s = (getRawDocument("bolt-eng-DF-170-181109-8867106"));
 		//Object temp = getProcessedDocument("bolt-eng-DF-170-181125-9140399");
 		//getByMentionsSearch("CIA");
 		//getByTexualSearch("CIA");
-		System.out.println(s);
+		//System.out.println(s);
+		
+		byte[] bytes = s.getBytes(Charset.forName("windows-1252"));
+		System.out.println(new String(bytes, 5111-39, 5119-5111+1, "UTF-8"));
 	}
 }
