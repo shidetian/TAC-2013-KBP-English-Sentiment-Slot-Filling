@@ -202,7 +202,6 @@ public class HTDetectionML {
 				}
 			}
 			
-			System.out.println(ht);
 			
 			return ht;
 		} catch (IOException e) {
