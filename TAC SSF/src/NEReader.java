@@ -36,6 +36,10 @@ public class NEReader {
 			if(temp.entityid.compareTo(entityid) != 0)
 				continue;
 			
+			String[] toks = temp.entity.split(" ");
+			if(toks.length > 5)
+				continue;
+			
 			if(temp.entity.length() > max){
 				max = temp.entity.length();
 				informative = temp;
