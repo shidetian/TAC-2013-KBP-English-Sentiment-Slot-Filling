@@ -22,9 +22,15 @@ import edu.stanford.nlp.trees.Tree;
 
 
 public class Preprocessor {
-	static LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
+	private static LexicalizedParser lp = null;
 	static TokenizerFactory<CoreLabel> ptbtf = PTBTokenizer.factory(new CoreLabelTokenFactory(), "invertible");
 	
+	public static LexicalizedParser getLexicalizedParser(){
+		if (lp==null){
+			lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
+		}
+		return lp;
+	}
 	public static byte[] toBase64(Object o) throws IOException{
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		ObjectOutputStream os = new ObjectOutputStream(bao);
@@ -83,7 +89,7 @@ public class Preprocessor {
 			offsetOut.flush();*/
 			tokens.append("\n");
 			offsets.append("\n");
-			Tree output = lp.apply(sentence);
+			Tree output = getLexicalizedParser().apply(sentence);
 			//output.pennPrint();
 			//TreePrint printer = new TreePrint("wordsAndTags,penn,typedDependencies");
 			//printer.printTree(output);
