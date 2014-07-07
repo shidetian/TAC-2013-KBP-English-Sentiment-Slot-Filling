@@ -20,9 +20,9 @@ public class DocumentSplitter {
 	public String getNext() throws IOException{
 		StringBuffer out = new StringBuffer();
 		String current = "";
-		char letter;
-		while ((letter = (char) file.read())!=-1){
-			current+=letter;
+		int letter;
+		while ((letter = file.read())!=-1){
+			current+=(char)letter;
 			if (letter=='\n'){
 				out.append(current);
 				if (current.toLowerCase().contains("</doc>")){
